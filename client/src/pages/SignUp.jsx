@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,6 +10,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+import { AuthContext } from "../context/AuthContext";
 
 const Copyright = (props) => {
   return (
@@ -33,8 +35,6 @@ const Copyright = (props) => {
   );
 };
 
-// TODO remove, this demo shouldn't need to reset the theme.
-
 const defaultTheme = createTheme();
 
 const handleSubmit = (event) => {
@@ -48,6 +48,14 @@ const handleSubmit = (event) => {
 };
 
 const SignUp = () => {
+  const {
+    signUpInfo,
+    updateSignUpInfo,
+    signUpError,
+    isSignUpLoding,
+    signUpUser,
+  } = useContext(AuthContext);
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -66,12 +74,7 @@ const SignUp = () => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
-          >
+          <Box component="form" noValidate onSubmit={signUpUser} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12}>
                 <TextField
@@ -81,6 +84,9 @@ const SignUp = () => {
                   fullWidth
                   label="Your Name"
                   autoFocus
+                  onChange={(e) => {
+                    updateSignUpInfo({ ...signUpInfo, name: e.target.value });
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -90,6 +96,9 @@ const SignUp = () => {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={(e) => {
+                    updateSignUpInfo({ ...signUpInfo, email: e.target.value });
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -100,6 +109,12 @@ const SignUp = () => {
                   label="Password"
                   type="password"
                   autoComplete="new-password"
+                  onChange={(e) => {
+                    updateSignUpInfo({
+                      ...signUpInfo,
+                      password: e.target.value,
+                    });
+                  }}
                 />
               </Grid>
             </Grid>
