@@ -31,7 +31,8 @@ export const AuthContextProvider = ({ children }) => {
     setSignInInfo(info);
   }, []);
 
-  console.log("signUpInfo", signUpInfo);
+  // console.log("signUpInfo", signUpInfo);
+  // console.log("signUpError", signUpError);
 
   const signUpUser = useCallback(
     async (e) => {
@@ -58,23 +59,26 @@ export const AuthContextProvider = ({ children }) => {
     [signUpInfo]
   );
 
-  const signInUser = useCallback(async (e) => {
-    e.preventDefault();
+  const signInUser = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-    setIsSignInLoading(true);
-    setSignInError(null);
+      setIsSignInLoading(true);
+      setSignInError(null);
 
-    const response = await postRequest(`${baseUrl}/users/login`, signInInfo);
+      const response = await postRequest(`${baseUrl}/users/login`, signInInfo);
 
-    setIsSignInLoading(false);
+      setIsSignInLoading(false);
 
-    if (response.error) {
-      return setSignInError(response);
-    }
+      if (response.error) {
+        return setSignInError(response);
+      }
 
-    localStorage.setItem("User", JSON.stringify(response));
-    setUser(response);
-  }, []);
+      localStorage.setItem("User", JSON.stringify(response));
+      setUser(response);
+    },
+    [signInInfo]
+  );
 
   const logoutUser = useCallback(() => {
     localStorage.removeItem("User");
