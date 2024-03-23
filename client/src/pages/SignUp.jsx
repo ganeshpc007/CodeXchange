@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,7 +10,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 import { AuthContext } from "../context/AuthContext";
 
 const Copyright = (props) => {
@@ -37,16 +38,6 @@ const Copyright = (props) => {
 
 const defaultTheme = createTheme();
 
-const handleSubmit = (event) => {
-  event.preventDefault();
-  const data = new FormData(event.currentTarget);
-  console.log({
-    email: data.get("email"),
-    password: data.get("password"),
-    name: data.get("name"),
-  });
-};
-
 const SignUp = () => {
   const {
     signUpInfo,
@@ -55,6 +46,24 @@ const SignUp = () => {
     isSignUpLoding,
     signUpUser,
   } = useContext(AuthContext);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarContent, setSnackbarContent] = useState(null);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSnackbarOpen(false);
+  };
+
+  useEffect(() => {
+    if (signUpError?.error) {
+      setSnackbarContent(signUpError?.message);
+      setSnackbarOpen(true);
+    }
+  }, [signUpError]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -123,8 +132,9 @@ const SignUp = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={isSignUpLoding}
             >
-              Sign Up
+              {isSignUpLoding ? "Almost There.." : "Sign Up"}
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
@@ -136,6 +146,21 @@ const SignUp = () => {
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} />
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert
+            onClose={handleClose}
+            severity="error"
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {snackbarContent}
+          </Alert>
+        </Snackbar>
       </Container>
     </ThemeProvider>
   );
