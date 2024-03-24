@@ -5,12 +5,15 @@ const messageSchema = new mongoose.Schema(
     chatId: String,
     senderId: String,
     text: String,
+    code: { type: String, required: false },
+    isCode: { type: Boolean, default: true },
+    lang: String,
   },
   {
     timestamps: true,
   }
 );
 
-const messageModel = mongoose.model("Message", messageSchema);
+const messageModel = mongoose.model("codify", messageSchema);
 
 export default messageModel;
