@@ -80,7 +80,7 @@ export const AuthContextProvider = ({ children }) => {
     [signInInfo]
   );
 
-  const logoutUser = useCallback(() => {
+  const siginOut = useCallback(() => {
     localStorage.removeItem("User");
     setUser(null);
   }, []);
@@ -99,7 +99,7 @@ export const AuthContextProvider = ({ children }) => {
         updateSignInInfo,
         signUpUser,
         signInUser,
-        logoutUser,
+        siginOut,
       }}
     >
       {children}
