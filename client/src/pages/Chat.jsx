@@ -1,17 +1,23 @@
-import React from "react";
+import { useState } from "react";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Badge from "@mui/material/Badge";
 import Avatar from "@mui/material/Avatar";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import profileAvatar from "../assets/avatar.svg";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Paper from "@mui/material/Paper";
-import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import AppDrawer from "../components/AppDrawer.jsx";
+
+import CodeDisplay from "../components/CodeDisplay";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -43,55 +49,125 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const Chat = () => {
-  const [value, setValue] = React.useState(0);
+  const [tabValue, setTabValue] = useState("2");
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
+  const theme = useTheme();
+
+  const toggleDrawer = (newOpen) => () => {
+    setDrawerOpen(newOpen);
+  };
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setTabValue(newValue);
   };
 
+  const cod = `const createMessage = async (req, res) => {
+    try {
+      const { chatId, senderId, text, code, isCode, lang } = req.body;
+  
+      const message = new messageModel({ chatId, senderId, text, code, isCode, lang });
+  
+      const response = await message.save();
+  
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  };`;
+
+  const lan = `javascript`;
+
   return (
-    <Container>
-      <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-        <StyledBadge
-          overlap="circular"
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        >
-          <Avatar alt="Profile Avatar " src={profileAvatar} />
-        </StyledBadge>
-        <Paper
-          component="form"
+    <Container
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: "3rem",
+        padding: "0px !important",
+        width: "100%",
+      }}
+    >
+      <AppDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
+
+      <Stack>
+        <Stack
+          direction="row"
+          spacing={2}
           sx={{
-            p: "2px",
-            display: "flex",
             alignItems: "center",
-            width: 250,
-            // borderRadius: 10,
+            width: "100%",
+            justifyContent: "center",
           }}
         >
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="Search contacts.."
-            // inputProps={{ "aria-label": "search google maps" }}
-          />
-          <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-            <SearchIcon />
-          </IconButton>
-        </Paper>
-        <Badge color="secondary" badgeContent={"02"} max={5}>
-          <NotificationsIcon />
-        </Badge>
-      </Stack>
-      <Stack>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="icon label tabs example"
+          <StyledBadge
+            overlap="circular"
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            onClick={toggleDrawer(true)}
+          >
+            <Avatar
+              alt="Profile Avatar "
+              src={profileAvatar}
+              sx={{ cursor: "pointer" }}
+            />
+          </StyledBadge>
+          <Paper
+            component="form"
+            sx={{
+              p: "2px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <InputBase
+              sx={{ ml: 1, flex: 1 }}
+              placeholder="Search.."
+              // inputProps={{ "aria-label": "search google maps" }}
+            />
+            <IconButton
+              type="button"
+              sx={{ p: "10px", cursor: "pointer" }}
+              aria-label="search"
+            >
+              <SearchIcon />
+            </IconButton>
+          </Paper>
+          <Badge
+            color="secondary"
+            badgeContent={"10"}
+            max={5}
+            sx={{ cursor: "pointer" }}
+          >
+            <NotificationsIcon />
+          </Badge>
+        </Stack>
+        <Stack
+          sx={{
+            alignItems: "center",
+          }}
         >
-          <Tab label="PERSONAL" />
-          <Tab label="ALL" />
-          <Tab label="GROUPS" />
-        </Tabs>
+          <TabContext value={tabValue}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <TabList
+                onChange={handleChange}
+                aria-label="lab API tabs example"
+              >
+                <Tab label="PERSONAL" value="1" />
+                <Tab label="ALL" value="2" />
+                <Tab label="TEAMS" value="3" />
+              </TabList>
+            </Box>
+            <TabPanel value="1">Item One</TabPanel>
+            <TabPanel value="2">Item Two</TabPanel>
+            <TabPanel value="3">Item Three</TabPanel>
+          </TabContext>
+          {/* <CodeDisplay code={cod} language={lan} /> */}
+        </Stack>
       </Stack>
+      <Stack>Chat box</Stack>
     </Container>
   );
 };
