@@ -6,7 +6,10 @@ const createChat = async (req, res) => {
 
     if (members.length === 2) {
       const chat = await chatModel.findOne({
-        members: { $all: [members[0], members[1]] },
+        $and: [
+          { members: { $all: [members[0], members[1]] } },
+          { members: { $size: 2 } },
+        ],
       });
       if (chat) return res.status(200).json(chat);
     }
