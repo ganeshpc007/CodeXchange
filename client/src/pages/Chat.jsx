@@ -16,7 +16,7 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import AppDrawer from "../components/AppDrawer.jsx";
-
+import UserChat from "../components/chat/UserChat.jsx";
 import CodeDisplay from "../components/CodeDisplay";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -147,9 +147,43 @@ const Chat = () => {
         <Stack
           sx={{
             alignItems: "center",
+            height: "87vh",
+            overflowY: "scroll",
+            padding: "10px",
+            "&::-webkit-scrollbar": {
+              width: "8px", // Width of the scrollbar
+              height: "8px", // Height of the scrollbar
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "#f1f1f1", // Color of the scrollbar track
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#888", // Color of the scrollbar thumb
+              borderRadius: "4px", // Rounded corners for the scrollbar thumb
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              background: "#555", // Color of the scrollbar thumb on hover
+            },
           }}
         >
-          <TabContext value={tabValue}>
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          <UserChat />
+          {/* <TabContext value={tabValue} sx={{width:"50%"}}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <TabList
                 onChange={handleChange}
@@ -161,9 +195,14 @@ const Chat = () => {
               </TabList>
             </Box>
             <TabPanel value="1">Item One</TabPanel>
-            <TabPanel value="2">Item Two</TabPanel>
+            <TabPanel value="2">
+              <UserChat/>
+              <UserChat/>
+              <UserChat/>
+              <UserChat/>
+            </TabPanel>
             <TabPanel value="3">Item Three</TabPanel>
-          </TabContext>
+          </TabContext> */}
           {/* <CodeDisplay code={cod} language={lan} /> */}
         </Stack>
       </Stack>
