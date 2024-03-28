@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Badge from "@mui/material/Badge";
@@ -18,6 +18,8 @@ import TabPanel from "@mui/lab/TabPanel";
 import AppDrawer from "../components/AppDrawer.jsx";
 import UserChat from "../components/chat/UserChat.jsx";
 import CodeDisplay from "../components/CodeDisplay";
+import { ChatContext } from "../context/ChatContext.jsx";
+import { AuthContext } from "../context/AuthContext.jsx";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -51,6 +53,8 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 const Chat = () => {
   const [tabValue, setTabValue] = useState("2");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { user } = useContext(AuthContext);
+  const { userChats } = useContext(ChatContext);
 
   const theme = useTheme();
 
@@ -166,23 +170,15 @@ const Chat = () => {
             },
           }}
         >
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
-          <UserChat />
+          {userChats?.map((chat, index) => {
+            console.log("index", index);
+            return (
+              <div key={index}>
+                <UserChat chat={chat} user={user} />
+              </div>
+            );
+          })}
+
           {/* <TabContext value={tabValue} sx={{width:"50%"}}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <TabList

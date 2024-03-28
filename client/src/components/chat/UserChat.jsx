@@ -1,7 +1,15 @@
 import React from "react";
 import { Avatar, Box, Stack, Typography } from "@mui/material";
+import { useFetchRecipients } from "../../hooks/useFetchRecipients";
 
 const UserChat = ({ chat, user }) => {
+  const { recipientUsers, loading } = useFetchRecipients(chat, user);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  console.log("recipientUsers", recipientUsers);
   return (
     <Box
       sx={{
