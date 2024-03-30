@@ -17,9 +17,9 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import AppDrawer from "../components/AppDrawer.jsx";
 import UserChat from "../components/chat/UserChat.jsx";
-import CodeDisplay from "../components/CodeDisplay";
 import { ChatContext } from "../context/ChatContext.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
+import ChatBox from "../components/chat/ChatBox.jsx";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -54,7 +54,7 @@ const Chat = () => {
   const [tabValue, setTabValue] = useState("2");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { user } = useContext(AuthContext);
-  const { userChats } = useContext(ChatContext);
+  const { userChats, updateCurrentChat } = useContext(ChatContext);
 
   const theme = useTheme();
 
@@ -65,42 +65,28 @@ const Chat = () => {
     setTabValue(newValue);
   };
 
-  const cod = `const createMessage = async (req, res) => {
-    try {
-      const { chatId, senderId, text, code, isCode, lang } = req.body;
-  
-      const message = new messageModel({ chatId, senderId, text, code, isCode, lang });
-  
-      const response = await message.save();
-  
-      res.status(200).json(response);
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  };`;
-
-  const lan = `javascript`;
-
   return (
     <Container
       sx={{
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        gap: "3rem",
+        gap: "1rem",
         padding: "0px !important",
         width: "100%",
+        height: "96vh",
       }}
     >
       <AppDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
 
-      <Stack>
+      <Stack sx={{ height: "100%" }}>
         <Stack
           direction="row"
           spacing={2}
           sx={{
             alignItems: "center",
             width: "100%",
+            height: "10%",
             justifyContent: "center",
           }}
         >
@@ -151,7 +137,7 @@ const Chat = () => {
         <Stack
           sx={{
             alignItems: "center",
-            height: "87vh",
+            height: "90%",
             overflowY: "scroll",
             padding: "10px",
             "&::-webkit-scrollbar": {
@@ -173,7 +159,7 @@ const Chat = () => {
           {userChats?.map((chat, index) => {
             console.log("index", index);
             return (
-              <div key={index}>
+              <div key={index} onClick={() => updateCurrentChat(chat)}>
                 <UserChat chat={chat} user={user} />
               </div>
             );
@@ -199,10 +185,11 @@ const Chat = () => {
             </TabPanel>
             <TabPanel value="3">Item Three</TabPanel>
           </TabContext> */}
-          {/* <CodeDisplay code={cod} language={lan} /> */}
         </Stack>
       </Stack>
-      <Stack>Chat box</Stack>
+      <Stack sx={{ height: "100%", width: "100%" }}>
+        <ChatBox />
+      </Stack>
     </Container>
   );
 };
