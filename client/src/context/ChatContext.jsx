@@ -1,10 +1,15 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useCallback } from "react";
 import { getRequest, baseUrl } from "../utils/services";
 
 export const ChatContext = createContext();
 
 export const ChatContextProvider = ({ children, user }) => {
   const [userChats, setUserChats] = useState(null);
+  const [currentChat, setCurrentChat] = useState(null);
+
+  const updateCurrentChat = useCallback((chat) => {
+    setCurrentChat(chat);
+  }, []);
 
   console.log("userChats", userChats);
 
@@ -19,5 +24,9 @@ export const ChatContextProvider = ({ children, user }) => {
     getUserChats();
   }, [user]);
 
-  return <ChatContext.Provider value={{userChats}}>{children}</ChatContext.Provider>;
+  return (
+    <ChatContext.Provider value={{ userChats, updateCurrentChat, currentChat }}>
+      {children}
+    </ChatContext.Provider>
+  );
 };
