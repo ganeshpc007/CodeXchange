@@ -8,8 +8,15 @@ const CodeDisplay = ({ code, language }) => {
   }, []);
 
   return (
-    <pre>
+    <pre style={{ margin: 0 }}>
       <code
+        style={{
+          background: "black",
+          color: "white",
+          width: "625px",
+          fontSize: "14px",
+          overflowX: "scroll",
+        }}
         className={`language-${language}`}
         dangerouslySetInnerHTML={{
           __html: hljs.highlight(code, { language }).value,
