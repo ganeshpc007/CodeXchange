@@ -4,7 +4,6 @@ import {
   Box,
   Stack,
   Typography,
-  AvatarGroup,
   Badge,
 } from "@mui/material";
 import { useFetchRecipients } from "../../hooks/useFetchRecipients";
