@@ -3,18 +3,13 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Badge from "@mui/material/Badge";
 import Avatar from "@mui/material/Avatar";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import profileAvatar from "../assets/avatar.svg";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Paper from "@mui/material/Paper";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
 import AppDrawer from "../components/AppDrawer.jsx";
 import UserChat from "../components/chat/UserChat.jsx";
 import { ChatContext } from "../context/ChatContext.jsx";
@@ -51,18 +46,12 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const Chat = () => {
-  const [tabValue, setTabValue] = useState("2");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { user } = useContext(AuthContext);
   const { userChats, updateCurrentChat } = useContext(ChatContext);
 
-  const theme = useTheme();
-
   const toggleDrawer = (newOpen) => () => {
     setDrawerOpen(newOpen);
-  };
-  const handleChange = (event, newValue) => {
-    setTabValue(newValue);
   };
 
   return (
@@ -164,27 +153,6 @@ const Chat = () => {
               </div>
             );
           })}
-
-          {/* <TabContext value={tabValue} sx={{width:"50%"}}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList
-                onChange={handleChange}
-                aria-label="lab API tabs example"
-              >
-                <Tab label="PERSONAL" value="1" />
-                <Tab label="ALL" value="2" />
-                <Tab label="TEAMS" value="3" />
-              </TabList>
-            </Box>
-            <TabPanel value="1">Item One</TabPanel>
-            <TabPanel value="2">
-              <UserChat/>
-              <UserChat/>
-              <UserChat/>
-              <UserChat/>
-            </TabPanel>
-            <TabPanel value="3">Item Three</TabPanel>
-          </TabContext> */}
         </Stack>
       </Stack>
       <Stack sx={{ height: "100%", width: "100%" }}>
