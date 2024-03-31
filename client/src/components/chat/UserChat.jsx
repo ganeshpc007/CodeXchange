@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Avatar,
-  Box,
-  Stack,
-  Typography,
-  Badge,
-} from "@mui/material";
+import { Avatar, Box, Stack, Typography, Badge } from "@mui/material";
 import { useFetchRecipients } from "../../hooks/useFetchRecipients";
 import { useFetchLatestMessage } from "../../hooks/useFetchLatestMessage";
 import moment from "moment";
@@ -101,10 +95,6 @@ const UserChat = ({ chat, user }) => {
         />
       )
     );
-    // <Avatar sx={{ width: 33, height: 33 }}>
-    //   {recipientUsers[0]?.name &&
-    //     getProfilePicLetter(recipientUsers[0]?.name)}
-    // </Avatar>
   };
 
   const getChatNeme = () => {
@@ -123,7 +113,7 @@ const UserChat = ({ chat, user }) => {
       sx={{
         display: "flex",
         flexDirection: "row",
-        width: "380px",
+        width: "280px",
         justifyContent: "space-between",
         margin: "15px 5px 0",
         borderBottom: "1px solid rgb(192, 189, 189)",
