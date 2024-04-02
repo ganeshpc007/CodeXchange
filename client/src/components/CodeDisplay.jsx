@@ -51,41 +51,71 @@
 
 // export default CodeDisplay;
 
-import React, { useState } from "react";
-import Editor from "@monaco-editor/react";
+// import React, { useState } from "react";
+// import Editor from "@monaco-editor/react";
+
+// const CodeDisplay = ({ code, language }) => {
+//   const [scrollBlocked, setScrollBlocked] = useState(true);
+
+//   const handleWheel = (e) => {
+//     if (scrollBlocked) {
+//       e.preventDefault();
+//     }
+//   };
+
+//   const toggleScrollBlock = () => {
+//     console.log("double click happend..");
+//     setScrollBlocked(!scrollBlocked);
+//   };
+
+//   return (
+//     <div
+//       onWheel={handleWheel}
+//       onDoubleClick={toggleScrollBlock}
+//       style={{ position: "relative", height: "300px" }}
+//     >
+//       <Editor
+//         height={"100%"}
+//         language={language}
+//         theme="vs-dark"
+//         value={code}
+//         options={{
+//           inlineSuggest: true,
+//           fontSize: "16px",
+//           formatOnType: true,
+//           autoClosingBrackets: true,
+//           minimap: { scale: 1 },
+//           automaticLayout: true,
+//           matchBrackets: "always",
+//         }}
+//       />
+//     </div>
+//   );
+// };
+
+// export default CodeDisplay;
+
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const CodeDisplay = ({ code, language }) => {
-  const [scrollEnabled, setScrollEnabled] = useState(false);
-
-  const toggleScroll = () => {
-    setScrollEnabled((prevScrollEnabled) => !prevScrollEnabled);
+  const customStyle = {
+    lineHeight: "1",
+    fontSize: "1rem",
+    borderRadius: "5px",
+    backgroundColor: "#f7f7f7",
+    margin: "15px auto",
+    width: "92%",
   };
-
   return (
-    <div
-      style={{
-        overflowY: scrollEnabled ? "auto" : "hidden",
-        height: "250px",
-        pointerEvents: scrollEnabled ? "auto" : "none",
-      }}
-      onDoubleClick={toggleScroll}
+    <SyntaxHighlighter
+      language={language}
+      style={solarizedlight}
+      customStyle={customStyle}
+      showLineNumbers
     >
-      <Editor
-        height={"100%"}
-        language={language}
-        theme="vs-dark"
-        value={code}
-        options={{
-          inlineSuggest: true,
-          fontSize: "16px",
-          formatOnType: true,
-          autoClosingBrackets: true,
-          minimap: { scale: 1 },
-          automaticLayout: true,
-          matchBrackets: "always",
-        }}
-      />
-    </div>
+      {code}
+    </SyntaxHighlighter>
   );
 };
 
