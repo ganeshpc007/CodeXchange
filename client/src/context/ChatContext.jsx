@@ -9,6 +9,7 @@ export const ChatContextProvider = ({ children, user }) => {
   const [messages, setMessages] = useState(null);
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);
   const [messagesError, setMessagesError] = useState(null);
+  const [openShareCode, setOpenShareCode] = useState(false);
 
   const updateCurrentChat = useCallback((chat) => {
     setCurrentChat(chat);
@@ -68,6 +69,10 @@ export const ChatContextProvider = ({ children, user }) => {
     []
   );
 
+  const updateOpenShareCode = useCallback((val) => {
+    setOpenShareCode(val);
+  }, []);
+
   useEffect(() => {
     const code = `
     const createMessage = async (req, res) => {
@@ -102,6 +107,8 @@ export const ChatContextProvider = ({ children, user }) => {
         messages,
         isMessagesLoading,
         sendCodeMessage,
+        openShareCode,
+        updateOpenShareCode,
       }}
     >
       {children}
