@@ -18,7 +18,7 @@ const App = () => {
 
   return (
     <ChatContextProvider user={user}>
-      <Container>
+      <div>
         <Routes>
           <Route
             path="/chat"
@@ -28,7 +28,7 @@ const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="*" element={<Navigate to="/signin" />} />
         </Routes>
-      </Container>
+      </div>
     </ChatContextProvider>
   );
 };
