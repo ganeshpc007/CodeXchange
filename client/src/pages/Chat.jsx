@@ -15,6 +15,7 @@ import UserChat from "../components/chat/UserChat.jsx";
 import { ChatContext } from "../context/ChatContext.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import ChatBox from "../components/chat/ChatBox.jsx";
+import ShareCode from "../components/chat/ShareCode.jsx";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -55,8 +56,8 @@ const Chat = () => {
   };
 
   return (
-    <Container
-      sx={{
+    <div
+      style={{
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
@@ -67,12 +68,14 @@ const Chat = () => {
       }}
     >
       <AppDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
-
-      <Stack sx={{ height: "100%" }}>
+      <ShareCode />
+      <Stack sx={{ height: "100%", width: "30%" }}>
         <Stack
           direction="row"
           spacing={2}
-          sx={{
+          style={{
+            display: "flex",
+
             alignItems: "center",
             width: "100%",
             height: "10%",
@@ -148,17 +151,21 @@ const Chat = () => {
           {userChats?.map((chat, index) => {
             console.log("index", index);
             return (
-              <div key={index} onClick={() => updateCurrentChat(chat)}>
+              <div
+                key={index}
+                onClick={() => updateCurrentChat(chat)}
+                style={{ width: "100%" }}
+              >
                 <UserChat chat={chat} user={user} />
               </div>
             );
           })}
         </Stack>
       </Stack>
-      <Stack sx={{ height: "100%", width: "100%" }}>
+      <Stack sx={{ height: "100%", width: "67%" }}>
         <ChatBox />
       </Stack>
-    </Container>
+    </div>
   );
 };
 
