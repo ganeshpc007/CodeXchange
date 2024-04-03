@@ -113,7 +113,7 @@ const UserChat = ({ chat, user }) => {
       sx={{
         display: "flex",
         flexDirection: "row",
-        width: "280px",
+        width: "90%",
         justifyContent: "space-between",
         margin: "15px 5px 0",
         borderBottom: "1px solid rgb(192, 189, 189)",
