@@ -1,14 +1,16 @@
-import { Stack, Box, Typography } from "@mui/material";
+import { Stack, Box, Typography, Button } from "@mui/material";
 import { useCallback, useContext, useEffect, useState } from "react";
 import CodeDisplay from "../CodeDisplay";
 import { ChatContext } from "../../context/ChatContext";
 import { TbFileDownload } from "react-icons/tb";
 import { LuClipboardCopy } from "react-icons/lu";
 import moment from "moment";
+import { GrSend } from "react-icons/gr";
 
 const ChatBox = () => {
   const [codeCopy, setCodeCopy] = useState(false);
-  const { currentChat, messages, sendCodeMessage } = useContext(ChatContext);
+  const { currentChat, messages, sendCodeMessage, updateOpenShareCode } =
+    useContext(ChatContext);
   console.log("messages", messages);
   const handleCopyClipboard = useCallback((code) => {
     navigator.clipboard.writeText(code);
@@ -21,7 +23,7 @@ const ChatBox = () => {
   if (!currentChat) {
     return (
       <p style={{ textAlign: "center", width: "100%" }}>
-        No conversation selected yet....
+        No chat selected yet....
       </p>
     );
   }
@@ -45,7 +47,21 @@ const ChatBox = () => {
   const lan = `javascript`;
 
   return (
-    <Stack sx={{ height: "100%" }}>
+    <Stack sx={{ height: "100%", position: "relative" }}>
+      <Button
+        variant="contained"
+        sx={{
+          position: "absolute",
+          right: "5%",
+          bottom: "4%",
+        }}
+        onClick={() => {
+          updateOpenShareCode(true);
+        }}
+        startIcon={<GrSend style={{ fontSize: "24px" }} />}
+      >
+        Share
+      </Button>
       <div
         style={{
           background: "#1e1e1e",
@@ -69,6 +85,20 @@ const ChatBox = () => {
           display: "flex",
           flexDirection: "column",
           gap: 2,
+          "&::-webkit-scrollbar": {
+            width: "8px", // Width of the scrollbar
+            height: "8px", // Height of the scrollbar
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "#f1f1f1", // Color of the scrollbar track
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#888", // Color of the scrollbar thumb
+            borderRadius: "4px", // Rounded corners for the scrollbar thumb
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            background: "#555", // Color of the scrollbar thumb on hover
+          },
         }}
       >
         {messages &&
@@ -76,7 +106,10 @@ const ChatBox = () => {
             return (
               <Stack
                 key={index}
-                sx={{ background: "#5e606c", borderRadius: "6px" }}
+                sx={{
+                  background: "#5e606c",
+                  borderRadius: "6px",
+                }}
               >
                 <Box
                   sx={{
@@ -102,7 +135,6 @@ const ChatBox = () => {
                 <Box sx={{ background: "black", color: "white" }}>
                   <div
                     style={{
-                      background: "black",
                       color: "white",
                       display: "flex",
                       justifyContent: "space-between",
