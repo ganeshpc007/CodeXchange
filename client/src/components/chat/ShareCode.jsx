@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import { Typography, Stack, TextField } from "@mui/material";
 import { ChatContext } from "../../context/ChatContext";
 import Autocomplete from "@mui/material/Autocomplete";
+import Editor from "@monaco-editor/react";
 
 const style = {
   position: "absolute",
@@ -21,44 +22,68 @@ const style = {
   p: 4,
 };
 
-function LanguageSelect() {
-  return (
-    <Autocomplete
-      sx={{ width: 300 }}
-      options={languages}
-      autoHighlight
-      getOptionLabel={(option) => option.label}
-      renderOption={(props, option) => (
-        <Box
-          component="li"
-          sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
-          {...props}
-        >
-          <img
-            loading="lazy"
-            width="20"
-            src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${option.icon}/${option.icon}-original.svg`}
-            alt={option.label}
-          />
-          {option.label}
-        </Box>
-      )}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Choose a programming language"
-          inputProps={{
-            ...params.inputProps,
-            autoComplete: "new-password",
-          }}
-        />
-      )}
-    />
-  );
-}
-
 const ShareCode = () => {
+  const [language, setLanguage] = useState(null);
+  const [code, setCode] = useState("");
+  const [message, setMessage] = useState("");
+
+  console.log("message", message);
+  console.log("language", language);
+  console.log("code", code);
+
+  const handleLanguageChange = useCallback((event, value) => {
+    setLanguage(value);
+  }, []);
+
+  const handleCodeChange = useCallback((value) => {
+    setCode(value);
+  }, []);
+
+  const handleMessageChange = useCallback((e) => {
+    setMessage(e.target.value);
+  }, []);
+
   const { openShareCode, updateOpenShareCode } = useContext(ChatContext);
+
+  function LanguageSelect() {
+    return (
+      <Autocomplete
+        required
+        onChange={handleLanguageChange}
+        sx={{ width: 300 }}
+        options={languages}
+        autoHighlight
+        getOptionLabel={(option) => option.label}
+        renderOption={(props, option) => (
+          <Box
+            component="li"
+            sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+            {...props}
+          >
+            <img
+              loading="lazy"
+              width="20"
+              src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${option.icon}/${option.icon}-original.svg`}
+              alt={option.label}
+            />
+            {option.label}
+          </Box>
+        )}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Choose a programming language"
+            inputProps={{
+              ...params.inputProps,
+              autoComplete: "new-password",
+            }}
+            autoComplete="off"
+          />
+        )}
+      />
+    );
+  }
+
   return (
     <div>
       <Modal
@@ -80,17 +105,37 @@ const ShareCode = () => {
               You are sharing code to Selected recepient
             </Typography>
             <Stack
-              sx={{ m: "15px", justifyContent: "space-between" }}
+              sx={{ m: "15px 0", justifyContent: "space-between" }}
               direction={"row"}
             >
               <TextField
-                sx={{ width: "65%" }}
+                sx={{ width: "70%" }}
                 id="outlined-basic"
                 label="Message/Component/Description"
                 variant="outlined"
+                autoComplete="off"
+                required
+                onChange={handleMessageChange}
               />
               {LanguageSelect()}
             </Stack>
+            <Editor
+              height="82%"
+              language={language?.icon}
+              theme="vs-dark"
+              value={code}
+              onChange={handleCodeChange}
+              options={{
+                inlineSuggest: true,
+                fontSize: "14px",
+                formatOnType: true,
+                autoClosingBrackets: true,
+                minimap: { scale: 10 },
+                autoIndent: "full",
+                contextmenu: true,
+                fontFamily: "monospace",
+              }}
+            />
           </Box>
         </Fade>
       </Modal>
@@ -130,6 +175,8 @@ const languages = [
   { label: "MATLAB", icon: "matlab" },
   { label: "Solidity", icon: "solidity" },
   { label: "Apex", icon: "apex" },
+  { label: "HTML5", icon: "html" },
+  { label: "CSS3", icon: "css" },
   { label: "Others", icon: "others" },
 ];
 
