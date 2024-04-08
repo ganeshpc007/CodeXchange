@@ -47,7 +47,7 @@ export const ChatContextProvider = ({ children, user }) => {
     getMessages();
   }, [currentChat]);
 
-  const sendCodeMessage = useCallback(
+  const sendMessage = useCallback(
     async (currentChatId, senderId, text, code) => {
       if (!text) return console.log("You must type somthing..");
 
@@ -90,7 +90,7 @@ export const ChatContextProvider = ({ children, user }) => {
         res.status(500).json(error);
       }
     };`;
-    // sendCodeMessage(
+    // sendMessage(
     //   "6601bb017ac5ec1da95c0072",
     //   "65a2c92a289aac397158c2f4",
     //   "Comment componet code..",
@@ -106,7 +106,7 @@ export const ChatContextProvider = ({ children, user }) => {
         currentChat,
         messages,
         isMessagesLoading,
-        sendCodeMessage,
+        sendMessage,
         openShareCode,
         updateOpenShareCode,
       }}
