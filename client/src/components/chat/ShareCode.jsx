@@ -4,10 +4,20 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
-import { Typography, Stack, TextField } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+
+import {
+  Typography,
+  Stack,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material";
 import { ChatContext } from "../../context/ChatContext";
 import Autocomplete from "@mui/material/Autocomplete";
 import Editor from "@monaco-editor/react";
+import { AuthContext } from "../../context/AuthContext";
+import { useFetchRecipients } from "../../hooks/useFetchRecipients";
 
 const style = {
   position: "absolute",
@@ -15,7 +25,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "70%",
-  height: "85%",
+  height: "90%",
   bgcolor: "background.paper",
   // border: "2px solid #000",
   boxShadow: 24,
@@ -26,6 +36,11 @@ const ShareCode = () => {
   const [language, setLanguage] = useState(null);
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
+  const { openShareCode, updateOpenShareCode, currentChat } =
+    useContext(ChatContext);
+  const { user } = useContext(AuthContext);
+
+  const { recipientUsers, loading } = useFetchRecipients(currentChat, user);
 
   console.log("message", message);
   console.log("language", language);
@@ -43,7 +58,12 @@ const ShareCode = () => {
     setMessage(e.target.value);
   }, []);
 
-  const { openShareCode, updateOpenShareCode } = useContext(ChatContext);
+  const getChatNeme = () => {
+    if (currentChat?.members?.length > 2) {
+      return currentChat.teamName;
+    }
+    return recipientUsers[0]?.name;
+  };
 
   function LanguageSelect() {
     return (
@@ -102,8 +122,18 @@ const ShareCode = () => {
         <Fade in={openShareCode}>
           <Box sx={style}>
             <Typography id="transition-modal-title" variant="h6" component="h2">
-              You are sharing code to Selected recepient
+              {loading ? (
+                "Loading.."
+              ) : (
+                <>
+                  You are sharing code to{" "}
+                  <b>
+                    <i>{getChatNeme(currentChat)}</i>{" "}
+                  </b>
+                </>
+              )}
             </Typography>
+
             <Stack
               sx={{ m: "15px 0", justifyContent: "space-between" }}
               direction={"row"}
@@ -120,7 +150,7 @@ const ShareCode = () => {
               {LanguageSelect()}
             </Stack>
             <Editor
-              height="82%"
+              height="76%"
               language={language?.icon}
               theme="vs-dark"
               value={code}
@@ -136,6 +166,21 @@ const ShareCode = () => {
                 fontFamily: "monospace",
               }}
             />
+            <Box
+              sx={{
+                padding: 1,
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <FormControlLabel
+                control={<Checkbox defaultChecked />}
+                label="Close Window On Send"
+              />
+              <Button variant="contained" endIcon={<SendIcon />}>
+                Send
+              </Button>
+            </Box>
           </Box>
         </Fade>
       </Modal>
