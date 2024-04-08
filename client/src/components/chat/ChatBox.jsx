@@ -2,15 +2,21 @@ import { Stack, Box, Typography, Button } from "@mui/material";
 import { useCallback, useContext, useEffect, useState } from "react";
 import CodeDisplay from "../CodeDisplay";
 import { ChatContext } from "../../context/ChatContext";
+import { AuthContext } from "../../context/AuthContext";
 import { TbFileDownload } from "react-icons/tb";
 import { LuClipboardCopy } from "react-icons/lu";
 import moment from "moment";
 import { GrSend } from "react-icons/gr";
+import { useFetchRecipients } from "../../hooks/useFetchRecipients";
 
 const ChatBox = () => {
   const [codeCopy, setCodeCopy] = useState(false);
-  const { currentChat, messages, sendCodeMessage, updateOpenShareCode } =
+  const { currentChat, messages, sendMessage, updateOpenShareCode } =
     useContext(ChatContext);
+  const { user } = useContext(AuthContext);
+
+  const { recipientUsers, loading } = useFetchRecipients(currentChat, user);
+  
   console.log("messages", messages);
   const handleCopyClipboard = useCallback((code) => {
     navigator.clipboard.writeText(code);
@@ -27,6 +33,13 @@ const ChatBox = () => {
       </p>
     );
   }
+
+  const getChatNeme = () => {
+    if (currentChat?.members?.length > 2) {
+      return currentChat.teamName;
+    }
+    return recipientUsers[0]?.name;
+  };
 
   const cod = `const createMessage = async (req, res) => {
         try {
@@ -74,7 +87,7 @@ const ChatBox = () => {
           alignItems: "center",
         }}
       >
-        Vx-Dev
+        {getChatNeme()}
       </div>
       <Stack
         sx={{
