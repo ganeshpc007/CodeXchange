@@ -1,15 +1,18 @@
 import { useContext, useState } from "react";
-import Container from "@mui/material/Container";
-import Stack from "@mui/material/Stack";
-import Badge from "@mui/material/Badge";
-import Avatar from "@mui/material/Avatar";
-import { styled } from "@mui/material/styles";
+import {
+  Stack,
+  Alert,
+  Badge,
+  Avatar,
+  styled,
+  InputBase,
+  IconButton,
+  Paper,
+  Snackbar,
+} from "@mui/material";
 import profileAvatar from "../assets/avatar.svg";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import Paper from "@mui/material/Paper";
 import AppDrawer from "../components/AppDrawer.jsx";
 import UserChat from "../components/chat/UserChat.jsx";
 import { ChatContext } from "../context/ChatContext.jsx";
@@ -49,10 +52,18 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 const Chat = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { user } = useContext(AuthContext);
-  const { userChats, updateCurrentChat } = useContext(ChatContext);
+  const { userChats, updateCurrentChat, alert, updateAlert } =
+    useContext(ChatContext);
 
   const toggleDrawer = (newOpen) => () => {
     setDrawerOpen(newOpen);
+  };
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    updateAlert({ ...alert, open: false });
   };
 
   return (
@@ -69,6 +80,21 @@ const Chat = () => {
     >
       <AppDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
       <ShareCode />
+      <Snackbar
+        open={alert?.open}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity={alert?.severity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {alert?.text}
+        </Alert>
+      </Snackbar>
       <Stack sx={{ height: "100%", width: "30%" }}>
         <Stack
           direction="row"
