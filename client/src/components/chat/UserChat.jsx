@@ -1,16 +1,22 @@
-import React from "react";
 import { Avatar, Box, Stack, Typography, Badge } from "@mui/material";
 import { useFetchRecipients } from "../../hooks/useFetchRecipients";
 import { useFetchLatestMessage } from "../../hooks/useFetchLatestMessage";
 import moment from "moment";
+import { useContext } from "react";
+import { ChatContext } from "../../context/ChatContext";
 
 const UserChat = ({ chat, user }) => {
+  const { onlineUsers } = useContext(ChatContext);
   const { recipientUsers, loading } = useFetchRecipients(chat, user);
   const { latestMessage } = useFetchLatestMessage(chat);
 
   if (loading) {
     return <div>Loading...</div>;
   }
+
+  const isOnline = onlineUsers?.some(
+    (u) => recipientUsers[0]?._id === u.userId
+  );
 
   const stringToColor = (string) => {
     let hash = 0;
@@ -90,7 +96,7 @@ const UserChat = ({ chat, user }) => {
     return (
       recipientUsers[0]?.name && (
         <Avatar
-          sx={{ width: 33, height: 33 }}
+          sx={{ width: 33, height: 33, border: "4px solid green" }}
           {...stringAvatar(recipientUsers[0]?.name)}
         />
       )
@@ -146,14 +152,25 @@ const UserChat = ({ chat, user }) => {
           </Typography>
         </Box>
       </Stack>
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        sx={{ fontSize: "12px" }}
+      <Stack
+        sx={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "end",
+        }}
       >
-        {latestMessage?.createdAt &&
-          moment(latestMessage?.createdAt).calendar()}
-      </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontSize: "12px" }}
+        >
+          {latestMessage?.createdAt &&
+            moment(latestMessage?.createdAt).calendar()}
+        </Typography>
+        <div className="this-user-notifications">{10}</div>
+        <span className={isOnline ? "user-online" : ""}></span>
+      </Stack>
     </Box>
   );
 };
