@@ -1,9 +1,5 @@
-import { useCallback, useContext, useState } from "react";
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { Backdrop, Box, Modal, Fade, Button } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
 import {
@@ -27,20 +23,38 @@ const style = {
   width: "70%",
   height: "90%",
   bgcolor: "background.paper",
-  // border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
 
 const ShareCode = () => {
   const [language, setLanguage] = useState(null);
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(null);
   const [message, setMessage] = useState("");
-  const { openShareCode, updateOpenShareCode, currentChat } =
-    useContext(ChatContext);
+  const [keepWindowClosed, setKeepWindowClosed] = useState(false);
+  const {
+    openShareCode,
+    updateOpenShareCode,
+    currentChat,
+    sendMessage,
+    isMessageSending,
+  } = useContext(ChatContext);
   const { user } = useContext(AuthContext);
 
   const { recipientUsers, loading } = useFetchRecipients(currentChat, user);
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("keepWindowClosed");
+    if (storedData !== null) {
+      setKeepWindowClosed(JSON.parse(storedData));
+    }
+  }, []);
+
+  const handleCheckboxChange = useCallback((event) => {
+    const isChecked = event.target.checked;
+    setKeepWindowClosed(isChecked);
+    localStorage.setItem("keepWindowClosed", JSON.stringify(isChecked));
+  }, []);
 
   console.log("message", message);
   console.log("language", language);
@@ -65,9 +79,34 @@ const ShareCode = () => {
     return recipientUsers[0]?.name;
   };
 
+  const clearForm = useCallback(() => {
+    setMessage("");
+    setCode(null);
+    setLanguage(null);
+  });
+
+  const handleSendMessage = useCallback(async () => {
+    if (message && code && language && user) {
+      const messageSentSuccessful = await sendMessage(
+        currentChat?._id,
+        user?._id,
+        message,
+        code,
+        language.icon
+      );
+      if (messageSentSuccessful) {
+        updateOpenShareCode(!keepWindowClosed);
+        clearForm();
+      }
+    } else {
+      alert("All feild are required..");
+    }
+  });
+
   function LanguageSelect() {
     return (
       <Autocomplete
+        value={language}
         required
         onChange={handleLanguageChange}
         sx={{ width: 300 }}
@@ -80,12 +119,15 @@ const ShareCode = () => {
             sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
             {...props}
           >
-            <img
-              loading="lazy"
-              width="20"
-              src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${option.icon}/${option.icon}-original.svg`}
-              alt={option.label}
-            />
+            {option.label !== "Others" && (
+              <img
+                loading="lazy"
+                width="20"
+                src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${option.icon}/${option.icon}-original.svg`}
+                alt={option.label}
+              />
+            )}
+
             {option.label}
           </Box>
         )}
@@ -126,7 +168,7 @@ const ShareCode = () => {
                 "Loading.."
               ) : (
                 <>
-                  You are sharing code to{" "}
+                  You Are Sending Code To{" "}
                   <b>
                     <i>{getChatNeme(currentChat)}</i>{" "}
                   </b>
@@ -140,11 +182,11 @@ const ShareCode = () => {
             >
               <TextField
                 sx={{ width: "70%" }}
-                id="outlined-basic"
                 label="Message/Component/Description"
                 variant="outlined"
                 autoComplete="off"
                 required
+                value={message}
                 onChange={handleMessageChange}
               />
               {LanguageSelect()}
@@ -174,11 +216,21 @@ const ShareCode = () => {
               }}
             >
               <FormControlLabel
-                control={<Checkbox defaultChecked />}
+                control={
+                  <Checkbox
+                    checked={keepWindowClosed}
+                    onChange={handleCheckboxChange}
+                  />
+                }
                 label="Close Window On Send"
               />
-              <Button variant="contained" endIcon={<SendIcon />}>
-                Send
+              <Button
+                variant="contained"
+                endIcon={<SendIcon />}
+                onClick={() => handleSendMessage()}
+                disabled={isMessageSending}
+              >
+                {isMessageSending ? "Sending" : "Send"}
               </Button>
             </Box>
           </Box>
@@ -210,18 +262,14 @@ const languages = [
   { label: "Erlang", icon: "erlang" },
   { label: "Haskell", icon: "haskell" },
   { label: "SQL", icon: "mysql" },
-  { label: "Objective-C", icon: "objectivec" },
-  { label: "Assembly", icon: "assemblyx86" },
   { label: "Dart", icon: "dart" },
   { label: "Groovy", icon: "groovy" },
   { label: "Lua", icon: "lua" },
   { label: "Fortran", icon: "fortran" },
-  { label: "Delphi", icon: "delphi" },
   { label: "MATLAB", icon: "matlab" },
   { label: "Solidity", icon: "solidity" },
-  { label: "Apex", icon: "apex" },
-  { label: "HTML5", icon: "html" },
-  { label: "CSS3", icon: "css" },
+  { label: "HTML5", icon: "html5" },
+  { label: "CSS3", icon: "css3" },
   { label: "Others", icon: "others" },
 ];
 
