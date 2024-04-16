@@ -12,21 +12,23 @@ export const useFetchRecipients = (chat, user) => {
     const getUsers = async () => {
       setLoading(true); // Set loading to true before fetching data
 
-      if (recipientsId.length < 1) {
+      if (recipientsId?.length < 1) {
         setLoading(false); // Set loading to false if no recipients
         return null;
       }
 
-      const userPromises = recipientsId.map(async (id) => {
+      const userPromises = recipientsId?.map(async (id) => {
         const user = await getRequest(`${baseUrl}/users/find/${id}`);
         // console.log("user", user);
         return user;
       });
 
-      const resolvedUsers = await Promise.all(userPromises);
-      //   console.log("resolvedUsers", resolvedUsers);
-      setRecipientUsers(resolvedUsers);
-      setLoading(false); // Set loading to false after fetching data
+      if (userPromises) {
+        const resolvedUsers = await Promise.all(userPromises);
+        //   console.log("resolvedUsers", resolvedUsers);
+        setRecipientUsers(resolvedUsers);
+        setLoading(false); // Set loading to false after fetching data
+      }
     };
 
     getUsers();
