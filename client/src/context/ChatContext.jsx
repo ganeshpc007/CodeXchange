@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState, useCallback } from "react";
 import { getRequest, baseUrl, postRequest } from "../utils/services";
+import { io } from "socket.io-client";
 
 export const ChatContext = createContext();
 
@@ -8,8 +9,83 @@ export const ChatContextProvider = ({ children, user }) => {
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState(null);
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);
+  const [isMessageSending, setIsMessageSending] = useState(false);
   const [messagesError, setMessagesError] = useState(null);
   const [openShareCode, setOpenShareCode] = useState(false);
+  const [alert, setAlert] = useState({
+    open: false,
+    severity: "success",
+    text: "",
+  });
+  const [socket, setSocket] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [newMessage, setNewMessage] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+
+  // initialize socket
+  useEffect(() => {
+    // socket domain/server
+    const newSocket = io("http://localhost:5000");
+    setSocket(newSocket);
+
+    // clean up socket, on reconnection or no longer needed
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [user]);
+
+  // add online users
+  useEffect(() => {
+    if (!socket) return;
+    socket.emit("addNewUser", user?._id);
+
+    // defining event
+    socket.on("getOnlineUsers", (response) => {
+      setOnlineUsers(response);
+    });
+
+    // kill the event/clean up function
+    return () => {
+      socket.off("getOnlineUsers");
+    };
+  }, [socket]);
+
+  // send message
+  useEffect(() => {
+    if (!socket) return;
+
+    const recipientId = currentChat?.members.find((id) => id !== user?._id);
+
+    socket.emit("sendMessage", { ...newMessage, recipientId });
+  }, [newMessage]);
+
+  //receive message and notification
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("getMessage", (response) => {
+      console.log("get message socket emit..");
+      if (currentChat?._id !== response.chatId) return;
+
+      setMessages((prev) => [...prev, response]);
+    });
+
+    socket.on("getNotification", (response) => {
+      const isChatOpen = currentChat?.members.some(
+        (id) => id === response.senderId
+      );
+      if (isChatOpen) {
+        setNotifications((prev) => [{ ...response, isRead: true }, ...prev]);
+      } else {
+        setNotifications((prev) => [response, ...prev]);
+      }
+    });
+
+    return () => {
+      socket.off("getMessage");
+      // socket.off("getNotification");
+    };
+  }, [socket, currentChat]);
 
   const updateCurrentChat = useCallback((chat) => {
     setCurrentChat(chat);
@@ -46,25 +122,35 @@ export const ChatContextProvider = ({ children, user }) => {
     };
     getMessages();
   }, [currentChat]);
+  console.log("userChats", userChats);
 
   const sendMessage = useCallback(
-    async (currentChatId, senderId, text, code) => {
-      if (!text) return console.log("You must type somthing..");
-
+    async (currentChatId, senderId, text, code, language) => {
+      setIsMessageSending(true);
       const response = await postRequest(`${baseUrl}/messages`, {
         text: text,
         senderId: senderId,
         chatId: currentChatId,
         code: code,
+        lang: language,
       });
 
       if (response.error) {
-        return console.log(response.error);
+        return false;
       }
+      setIsMessageSending(false);
+
       console.log("msg response", response);
-      // setTextMessage("");
-      // setMessages((prev) => [...prev, response]);
-      // setNewMessage(response);
+
+      setAlert({
+        open: true,
+        severity: "success",
+        text: "Code Sent Sucessfully!",
+      });
+      setNewMessage(response);
+      setMessages((prev) => [...prev, response]);
+
+      return true;
     },
     []
   );
@@ -73,29 +159,8 @@ export const ChatContextProvider = ({ children, user }) => {
     setOpenShareCode(val);
   }, []);
 
-  useEffect(() => {
-    const code = `
-    const createMessage = async (req, res) => {
-      try {
-        const { chatId, senderId, text, 
-          code, isCode, lang } = req.body;
-    
-        const message = 
-        new messageModel({ chatId, senderId, text, code, isCode, lang });
-    
-      const response = await message.save();
-    
-        res.status(200).json(response);
-      } catch (error) {
-        res.status(500).json(error);
-      }
-    };`;
-    // sendMessage(
-    //   "6601bb017ac5ec1da95c0072",
-    //   "65a2c92a289aac397158c2f4",
-    //   "Comment componet code..",
-    //   code
-    // );
+  const updateAlert = useCallback((val) => {
+    setAlert(val);
   }, []);
 
   return (
@@ -106,9 +171,15 @@ export const ChatContextProvider = ({ children, user }) => {
         currentChat,
         messages,
         isMessagesLoading,
+        isMessageSending,
         sendMessage,
         openShareCode,
         updateOpenShareCode,
+        alert,
+        updateAlert,
+        newMessage,
+        onlineUsers,
+        notifications,
       }}
     >
       {children}
