@@ -1,28 +1,37 @@
+import { useCallback, useContext, useEffect, useState, useRef } from "react";
 import { Stack, Box, Typography, Button } from "@mui/material";
-import { useCallback, useContext, useEffect, useState } from "react";
 import CodeDisplay from "../CodeDisplay";
 import { ChatContext } from "../../context/ChatContext";
 import { AuthContext } from "../../context/AuthContext";
 import { TbFileDownload } from "react-icons/tb";
 import { LuClipboardCopy } from "react-icons/lu";
+import { HiOutlineClipboardCheck } from "react-icons/hi";
 import moment from "moment";
 import { GrSend } from "react-icons/gr";
 import { useFetchRecipients } from "../../hooks/useFetchRecipients";
 
 const ChatBox = () => {
-  const [codeCopy, setCodeCopy] = useState(false);
-  const { currentChat, messages, sendMessage, updateOpenShareCode } =
+  const [codeCopy, setCodeCopy] = useState("");
+  const { currentChat, messages, updateOpenShareCode, onlineUsers } =
     useContext(ChatContext);
   const { user } = useContext(AuthContext);
 
+  const lastMessageRef = useRef(null);
+
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   const { recipientUsers, loading } = useFetchRecipients(currentChat, user);
-  
+
   console.log("messages", messages);
-  const handleCopyClipboard = useCallback((code) => {
+  const handleCopyClipboard = useCallback((code, msgId) => {
     navigator.clipboard.writeText(code);
-    setCodeCopy(true);
+    setCodeCopy(msgId);
     setTimeout(() => {
-      setCodeCopy(false);
+      setCodeCopy("");
     }, 3000);
   }, []);
 
@@ -41,23 +50,12 @@ const ChatBox = () => {
     return recipientUsers[0]?.name;
   };
 
-  const cod = `const createMessage = async (req, res) => {
-        try {
-          const { chatId, senderId, text, 
-            code, isCode, lang } = req.body;
-      
-          const message = 
-          new messageModel({ chatId, senderId, text, code, isCode, lang });
-      
-        const response = await message.save();
-      
-          res.status(200).json(response);
-        } catch (error) {
-          res.status(500).json(error);
-        }
-      };`;
-
-  const lan = `javascript`;
+  const isOnlineUser = () => {
+    if (currentChat?.members?.length > 2) return false;
+    const recipientsId = currentChat?.members.filter((id) => id !== user?._id);
+    console.log("recipientsId", recipientsId);
+    return onlineUsers?.some((u) => recipientsId[0] === u.userId);
+  };
 
   return (
     <Stack sx={{ height: "100%", position: "relative" }}>
@@ -79,15 +77,17 @@ const ChatBox = () => {
         style={{
           background: "#1e1e1e",
           padding: "10px",
-          height: "4%",
+          height: "6%",
           textAlign: "center",
           color: "#ffff",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          flexDirection: "column",
         }}
       >
-        {getChatNeme()}
+        <label style={{fontSize:"20px"}}>{getChatNeme()}</label>
+        {isOnlineUser() ? <label style={{fontSize:"12px", color:"rgb(0, 219, 0)"}}>Online</label> : ""}
       </div>
       <Stack
         sx={{
@@ -123,6 +123,7 @@ const ChatBox = () => {
                   background: "#5e606c",
                   borderRadius: "6px",
                 }}
+                ref={index === messages.length - 1 ? lastMessageRef : null}
               >
                 <Box
                   sx={{
@@ -157,34 +158,47 @@ const ChatBox = () => {
                     <Typography style={{ fontStyle: "italic" }}>
                       {msg.text}
                     </Typography>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "10px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography sx={{ fontSize: "12px" }}>
-                        {"<Javascript/>"}
-                      </Typography>
-                      {codeCopy ? (
-                        <Typography sx={{ fontSize: "12px" }}>
-                          Copied!
+                    {msg.code && (
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "10px",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography sx={{ display: "flex" }}>
+                          {msg?.lang !== "others" ? (
+                            <img
+                              loading="lazy"
+                              width="18"
+                              src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${msg.lang}/${msg.lang}-original.svg`}
+                              alt={msg.lang}
+                            />
+                          ) : (
+                            "Others"
+                          )}
                         </Typography>
-                      ) : (
-                        <LuClipboardCopy
-                          title="Copy code!"
-                          style={{ fontSize: "16px", cursor: "pointer" }}
-                          onClick={() => handleCopyClipboard(cod)}
+                        {codeCopy === msg._id ? (
+                          <HiOutlineClipboardCheck
+                            style={{ fontSize: "22px" }}
+                          />
+                        ) : (
+                          <LuClipboardCopy
+                            title="Copy code!"
+                            style={{ fontSize: "20px", cursor: "pointer" }}
+                            onClick={() => handleCopyClipboard(cod, msg._id)}
+                          />
+                        )}
+                        <TbFileDownload
+                          title="Download file!"
+                          style={{ fontSize: "20px", cursor: "pointer" }}
                         />
-                      )}
-                      <TbFileDownload
-                        title="Download file!"
-                        style={{ fontSize: "18px", cursor: "pointer" }}
-                      />
-                    </div>
+                      </div>
+                    )}
                   </div>
-                  <CodeDisplay code={msg.code} language={lan} />
+                  {msg.code && (
+                    <CodeDisplay code={msg.code} language={msg.lang} />
+                  )}
                 </Box>
               </Stack>
             );
