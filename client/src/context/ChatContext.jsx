@@ -102,7 +102,7 @@ export const ChatContextProvider = ({ children, user }) => {
     };
 
     getUserChats();
-  }, [user]);
+  }, [user, notifications]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -122,7 +122,6 @@ export const ChatContextProvider = ({ children, user }) => {
     };
     getMessages();
   }, [currentChat]);
-  console.log("userChats", userChats);
 
   const sendMessage = useCallback(
     async (currentChatId, senderId, text, code, language) => {
