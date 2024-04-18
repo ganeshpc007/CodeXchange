@@ -3,7 +3,7 @@ import { getRequest, baseUrl } from "../utils/services";
 import { ChatContext } from "../context/ChatContext";
 
 export const useFetchLatestMessage = (chat) => {
-  const { newMessage } = useContext(ChatContext);
+  const { newMessage, notifications } = useContext(ChatContext);
   const [latestMessage, setLatestMessage] = useState(null);
 
   useEffect(() => {
@@ -19,6 +19,6 @@ export const useFetchLatestMessage = (chat) => {
     };
 
     getMessages();
-  }, [newMessage]);
+  }, [newMessage, notifications]);
   return { latestMessage };
 };
