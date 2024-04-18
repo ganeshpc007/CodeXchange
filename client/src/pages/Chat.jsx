@@ -9,6 +9,7 @@ import {
   IconButton,
   Paper,
   Snackbar,
+  Menu,
 } from "@mui/material";
 import profileAvatar from "../assets/avatar.svg";
 import SearchIcon from "@mui/icons-material/Search";
@@ -51,6 +52,15 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const Chat = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const { user } = useContext(AuthContext);
   const { userChats, updateCurrentChat, alert, updateAlert } =
     useContext(ChatContext);
@@ -66,6 +76,53 @@ const Chat = () => {
     updateAlert({ ...alert, open: false });
   };
 
+  const notificationMenu = () => {
+    return (
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+            mt: 1.5,
+            "& .MuiAvatar-root": {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            "&::before": {
+              content: '""',
+              display: "block",
+              position: "absolute",
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
+              zIndex: 0,
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      >
+        <div className="notifications-box">
+          <div className="notifications-header">
+            <div style={{ fontWeight: "700", fontSize: "20px" }}>
+              Notifications
+            </div>
+            <div className="mark-as-read">Mark all as read</div>
+          </div>
+          <span className="notification">No notifications yet..</span>
+        </div>
+      </Menu>
+    );
+  };
   return (
     <div
       style={{
@@ -145,12 +202,14 @@ const Chat = () => {
           </Paper>
           <Badge
             color="secondary"
-            badgeContent={"10"}
+            badgeContent={"8"}
             max={5}
             sx={{ cursor: "pointer" }}
+            onClick={handleClick}
           >
             <NotificationsIcon />
           </Badge>
+          {notificationMenu()}
         </Stack>
         <Stack
           sx={{
