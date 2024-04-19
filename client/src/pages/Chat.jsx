@@ -20,6 +20,8 @@ import { ChatContext } from "../context/ChatContext.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import ChatBox from "../components/chat/ChatBox.jsx";
 import ShareCode from "../components/chat/ShareCode.jsx";
+import { unReadNotificationsFunc } from "../utils/unReadNotifications.js";
+import moment from "moment";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -62,12 +64,26 @@ const Chat = () => {
   };
 
   const { user } = useContext(AuthContext);
-  const { userChats, updateCurrentChat, alert, updateAlert } =
-    useContext(ChatContext);
+  const {
+    userChats,
+    updateCurrentChat,
+    alert,
+    updateAlert,
+    notifications,
+    allUsers,
+    markNotificationAsRead,
+    markAllNotificationAsRead,
+  } = useContext(ChatContext);
 
   const toggleDrawer = (newOpen) => () => {
     setDrawerOpen(newOpen);
   };
+
+  const unReadNotifications = unReadNotificationsFunc(notifications);
+  const modifiedNotifications = notifications?.map((n) => {
+    const sender = allUsers?.find((u) => u?._id === n?.senderId);
+    return { ...n, senderName: sender?.name };
+  });
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -116,13 +132,41 @@ const Chat = () => {
             <div style={{ fontWeight: "700", fontSize: "20px" }}>
               Notifications
             </div>
-            <div className="mark-as-read">Mark all as read</div>
+            <div
+              className="mark-as-read"
+              onClick={() => markAllNotificationAsRead(notifications)}
+            >
+              Mark all as read
+            </div>
           </div>
-          <span className="notification">No notifications yet..</span>
+          {modifiedNotifications?.length === 0 ? (
+            <span className="notification">No notifications yet..</span>
+          ) : null}
+          {modifiedNotifications &&
+            modifiedNotifications.map((n, index) => {
+              return (
+                <div
+                  key={index}
+                  className={
+                    n.isRead ? "notification" : "notification not-read"
+                  }
+                  onClick={() => {
+                    markNotificationAsRead(n, userChats, notifications);
+                    handleClose();
+                  }}
+                >
+                  <span>{n.senderName} sent you new message</span>
+                  <span className="notification-time">
+                    {moment(n.date).calendar()}
+                  </span>
+                </div>
+              );
+            })}
         </div>
       </Menu>
     );
   };
+
   return (
     <div
       style={{
@@ -202,7 +246,7 @@ const Chat = () => {
           </Paper>
           <Badge
             color="secondary"
-            badgeContent={"8"}
+            badgeContent={unReadNotifications?.length}
             max={5}
             sx={{ cursor: "pointer" }}
             onClick={handleClick}
