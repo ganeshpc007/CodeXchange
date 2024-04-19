@@ -59,13 +59,13 @@
 }
 
 .notification.not-read {
-  background: #263159;
+  background: #abfbbb;
 }
 
 .notification-time {
   margin-top: 0.2rem;
   font-size: 12px;
-  color: #e0e0e0;
+  color: #737373;
 }
 
 .notification-count {
@@ -85,7 +85,8 @@
 
 .this-user-notifications {
   display: flex;
-  background: #00bd9b;
+  background: #9c27b0;
+  color: white;
   height: 20px;
   width: 20px;
   font-size: 12px;
