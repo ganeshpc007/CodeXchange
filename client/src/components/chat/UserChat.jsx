@@ -4,9 +4,11 @@ import { useFetchLatestMessage } from "../../hooks/useFetchLatestMessage";
 import moment from "moment";
 import { useContext } from "react";
 import { ChatContext } from "../../context/ChatContext";
+import { unReadNotificationsFunc } from "../../utils/unReadNotifications";
 
 const UserChat = ({ chat, user }) => {
-  const { onlineUsers } = useContext(ChatContext);
+  const { onlineUsers, notifications, markThisUserNotificationsAsRead } =
+    useContext(ChatContext);
   const { recipientUsers, loading } = useFetchRecipients(chat, user);
   const { latestMessage } = useFetchLatestMessage(chat);
 
@@ -14,6 +16,12 @@ const UserChat = ({ chat, user }) => {
     return <div>Loading...</div>;
   }
 
+  const unreadNotifications = unReadNotificationsFunc(notifications);
+  console.log("unreadNotifications ..........", unreadNotifications);
+  const thisUserNotifications = unreadNotifications?.filter(
+    (n) => n.chatId === chat?._id
+  );
+  console.log("thisUserNotifications", thisUserNotifications);
   const isOnline = onlineUsers?.some(
     (u) => recipientUsers[0]?._id === u.userId
   );
@@ -116,6 +124,11 @@ const UserChat = ({ chat, user }) => {
 
   return (
     <Box
+      onClick={() => {
+        if (thisUserNotifications.length > 0) {
+          markThisUserNotificationsAsRead(chat?._id, notifications);
+        }
+      }}
       sx={{
         display: "flex",
         flexDirection: "row",
@@ -168,7 +181,11 @@ const UserChat = ({ chat, user }) => {
           {latestMessage?.createdAt &&
             moment(latestMessage?.createdAt).calendar()}
         </Typography>
-        <div className="this-user-notifications">{10}</div>
+        {thisUserNotifications.length > 0 && (
+          <div className="this-user-notifications">
+            {thisUserNotifications.length}
+          </div>
+        )}
         <span className={isOnline ? "user-online" : ""}></span>
       </Stack>
     </Box>
