@@ -36,7 +36,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const signUpUser = useCallback(
     async (e) => {
-      console.log("signUpUser called");
+      // console.log("signUpUser called");
       e.preventDefault();
 
       setIsSignUpLoding(true);
