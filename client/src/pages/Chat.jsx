@@ -22,6 +22,8 @@ import ChatBox from "../components/chat/ChatBox.jsx";
 import ShareCode from "../components/chat/ShareCode.jsx";
 import { unReadNotificationsFunc } from "../utils/unReadNotifications.js";
 import moment from "moment";
+import { IoPersonAdd } from "react-icons/io5";
+import NewChat from "../components/NewChat.jsx";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -73,6 +75,7 @@ const Chat = () => {
     allUsers,
     markNotificationAsRead,
     markAllNotificationAsRead,
+    updateOpenNewChat,
   } = useContext(ChatContext);
 
   const toggleDrawer = (newOpen) => () => {
@@ -181,6 +184,7 @@ const Chat = () => {
     >
       <AppDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
       <ShareCode />
+      <NewChat />
       <Snackbar
         open={alert?.open}
         autoHideDuration={6000}
@@ -196,7 +200,7 @@ const Chat = () => {
           {alert?.text}
         </Alert>
       </Snackbar>
-      <Stack sx={{ height: "100%", width: "30%" }}>
+      <Stack sx={{ height: "100%", width: "30%", position: "relative" }}>
         <Stack
           direction="row"
           spacing={2}
@@ -278,7 +282,6 @@ const Chat = () => {
           }}
         >
           {userChats?.map((chat, index) => {
-            console.log("index", index);
             return (
               <div
                 key={index}
@@ -290,6 +293,15 @@ const Chat = () => {
             );
           })}
         </Stack>
+        <div style={{ position: "absolute", bottom: "30px", right: "30px" }}>
+          <IconButton
+            color="primary"
+            size="large"
+            onClick={() => updateOpenNewChat(true)}
+          >
+            <IoPersonAdd style={{ color: "black" }} />
+          </IconButton>
+        </div>
       </Stack>
       <Stack sx={{ height: "100%", width: "67%" }}>
         <ChatBox />
