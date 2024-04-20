@@ -56,9 +56,9 @@ const ShareCode = () => {
     localStorage.setItem("keepWindowClosed", JSON.stringify(isChecked));
   }, []);
 
-  console.log("message", message);
-  console.log("language", language);
-  console.log("code", code);
+  // console.log("message", message);
+  // console.log("language", language);
+  // console.log("code", code);
 
   const handleLanguageChange = useCallback((event, value) => {
     setLanguage(value);
@@ -147,96 +147,94 @@ const ShareCode = () => {
   }
 
   return (
-    <div>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={openShareCode}
-        onClose={() => updateOpenShareCode(false)}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-      >
-        <Fade in={openShareCode}>
-          <Box sx={style}>
-            <Typography id="transition-modal-title" variant="h6" component="h2">
-              {loading ? (
-                "Loading.."
-              ) : (
-                <>
-                  You Are Sending Code To{" "}
-                  <b>
-                    <i>{getChatNeme(currentChat)}</i>{" "}
-                  </b>
-                </>
-              )}
-            </Typography>
+    <Modal
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      open={openShareCode}
+      onClose={() => updateOpenShareCode(false)}
+      closeAfterTransition
+      slots={{ backdrop: Backdrop }}
+      slotProps={{
+        backdrop: {
+          timeout: 500,
+        },
+      }}
+    >
+      <Fade in={openShareCode}>
+        <Box sx={style}>
+          <Typography id="transition-modal-title" variant="h6" component="h2">
+            {loading ? (
+              "Loading.."
+            ) : (
+              <>
+                You Are Sending Code To{" "}
+                <b>
+                  <i>{getChatNeme(currentChat)}</i>{" "}
+                </b>
+              </>
+            )}
+          </Typography>
 
-            <Stack
-              sx={{ m: "15px 0", justifyContent: "space-between" }}
-              direction={"row"}
-            >
-              <TextField
-                sx={{ width: "70%" }}
-                label="Message/Component/Description"
-                variant="outlined"
-                autoComplete="off"
-                required
-                value={message}
-                onChange={handleMessageChange}
-              />
-              {LanguageSelect()}
-            </Stack>
-            <Editor
-              height="76%"
-              language={language?.icon}
-              theme="vs-dark"
-              value={code}
-              onChange={handleCodeChange}
-              options={{
-                inlineSuggest: true,
-                fontSize: "14px",
-                formatOnType: true,
-                autoClosingBrackets: true,
-                minimap: { scale: 10 },
-                autoIndent: "full",
-                contextmenu: true,
-                fontFamily: "monospace",
-              }}
+          <Stack
+            sx={{ m: "15px 0", justifyContent: "space-between" }}
+            direction={"row"}
+          >
+            <TextField
+              sx={{ width: "70%" }}
+              label="Message/Component/Description"
+              variant="outlined"
+              autoComplete="off"
+              required
+              value={message}
+              onChange={handleMessageChange}
             />
-            <Box
-              sx={{
-                padding: 1,
-                display: "flex",
-                justifyContent: "space-between",
-              }}
+            {LanguageSelect()}
+          </Stack>
+          <Editor
+            height="76%"
+            language={language?.icon}
+            theme="vs-dark"
+            value={code}
+            onChange={handleCodeChange}
+            options={{
+              inlineSuggest: true,
+              fontSize: "14px",
+              formatOnType: true,
+              autoClosingBrackets: true,
+              minimap: { scale: 10 },
+              autoIndent: "full",
+              contextmenu: true,
+              fontFamily: "monospace",
+            }}
+          />
+          <Box
+            sx={{
+              padding: 1,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={keepWindowClosed}
+                  onChange={handleCheckboxChange}
+                />
+              }
+              label="Close Window On Send"
+            />
+            <Button
+              variant="contained"
+              endIcon={<SendIcon />}
+              onClick={() => handleSendMessage()}
+              disabled={isMessageSending}
             >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={keepWindowClosed}
-                    onChange={handleCheckboxChange}
-                  />
-                }
-                label="Close Window On Send"
-              />
-              <Button
-                variant="contained"
-                endIcon={<SendIcon />}
-                onClick={() => handleSendMessage()}
-                disabled={isMessageSending}
-              >
-                {isMessageSending ? "Sending" : "Send"}
-              </Button>
-            </Box>
+              {isMessageSending ? "Sending" : "Send"}
+            </Button>
           </Box>
-        </Fade>
-      </Modal>
-    </div>
+        </Box>
+      </Fade>
+    </Modal>
   );
 };
 
