@@ -95,4 +95,20 @@ const getUsers = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, findUser, getUsers };
+const findByEmail = async (req, res) => {
+  try {
+    const email = req.params.email;
+
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json("User not found");
+    }
+
+    res.status(200).json({ _id: user._id, email: user.email, name: user.name });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+export { registerUser, loginUser, findUser, getUsers, findByEmail };
