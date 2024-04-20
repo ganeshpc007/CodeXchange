@@ -1,10 +1,12 @@
 import { createContext, useEffect, useState, useCallback } from "react";
 import { getRequest, baseUrl, postRequest } from "../utils/services";
 import { io } from "socket.io-client";
+import { useContext } from "react";
+import { AuthContext } from "./AuthContext";
 
 export const ChatContext = createContext();
 
-export const ChatContextProvider = ({ children, user }) => {
+export const ChatContextProvider = ({ children }) => {
   const [userChats, setUserChats] = useState(null);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState(null);
@@ -23,8 +25,10 @@ export const ChatContextProvider = ({ children, user }) => {
   const [notifications, setNotifications] = useState([]);
   const [potentialChats, setPotentialChats] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
+  const [openNewChat, setOpenNewChat] = useState(false);
 
-  console.log("notifications", notifications);
+  const { user } = useContext(AuthContext);
+
   // initialize socket
   useEffect(() => {
     // socket domain/server
@@ -67,7 +71,6 @@ export const ChatContextProvider = ({ children, user }) => {
     if (!socket) return;
 
     socket.on("getMessage", (response) => {
-      console.log("get message socket emit..");
       if (currentChat?._id !== response.chatId) return;
 
       setMessages((prev) => [...prev, response]);
@@ -93,8 +96,6 @@ export const ChatContextProvider = ({ children, user }) => {
   const updateCurrentChat = useCallback((chat) => {
     setCurrentChat(chat);
   }, []);
-
-  console.log("userChats", userChats);
 
   useEffect(() => {
     const getUserChats = async () => {
@@ -168,8 +169,6 @@ export const ChatContextProvider = ({ children, user }) => {
       }
       setIsMessageSending(false);
 
-      console.log("msg response", response);
-
       setAlert({
         open: true,
         severity: "success",
@@ -226,6 +225,36 @@ export const ChatContextProvider = ({ children, user }) => {
     setNotifications(mNotifications);
   }, []);
 
+  const updateOpenNewChat = useCallback((val) => {
+    setOpenNewChat(val);
+  }, []);
+
+  const createChat = async (members, teamName) => {
+    const response = await postRequest(`${baseUrl}/chats`, {
+      members,
+      teamName,
+    });
+    console.log("response", response);
+    if (response.error) {
+      return console.log("Error occored while chat creation", response);
+    }
+    const chatExists = userChats?.find((c) => c._id === response._id);
+
+    if (!chatExists) {
+      setUserChats((prev) => [...prev, response]);
+    }
+    setCurrentChat(response);
+  };
+
+  const findUserByEmail = useCallback(async (email, user) => {
+    const response = await getRequest(`${baseUrl}/users/findbyemail/${email}`);
+    if (response.error) {
+      return false;
+    }
+    await createChat([user?._id, response?._id]);
+    return true;
+  }, []);
+
   return (
     <ChatContext.Provider
       value={{
@@ -248,6 +277,9 @@ export const ChatContextProvider = ({ children, user }) => {
         markNotificationAsRead,
         markThisUserNotificationsAsRead,
         markAllNotificationAsRead,
+        openNewChat,
+        updateOpenNewChat,
+        findUserByEmail,
       }}
     >
       {children}
