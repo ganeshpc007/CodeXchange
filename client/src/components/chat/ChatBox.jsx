@@ -26,7 +26,6 @@ const ChatBox = () => {
 
   const { recipientUsers, loading } = useFetchRecipients(currentChat, user);
 
-  console.log("messages", messages);
   const handleCopyClipboard = useCallback((code, msgId) => {
     navigator.clipboard.writeText(code);
     setCodeCopy(msgId);
@@ -53,7 +52,6 @@ const ChatBox = () => {
   const isOnlineUser = () => {
     if (currentChat?.members?.length > 2) return false;
     const recipientsId = currentChat?.members.filter((id) => id !== user?._id);
-    console.log("recipientsId", recipientsId);
     return onlineUsers?.some((u) => recipientsId[0] === u.userId);
   };
 
@@ -86,8 +84,14 @@ const ChatBox = () => {
           flexDirection: "column",
         }}
       >
-        <label style={{fontSize:"20px"}}>{getChatNeme()}</label>
-        {isOnlineUser() ? <label style={{fontSize:"12px", color:"rgb(0, 219, 0)"}}>Online</label> : ""}
+        <label style={{ fontSize: "20px" }}>{getChatNeme()}</label>
+        {isOnlineUser() ? (
+          <label style={{ fontSize: "12px", color: "rgb(0, 219, 0)" }}>
+            Online
+          </label>
+        ) : (
+          ""
+        )}
       </div>
       <Stack
         sx={{
