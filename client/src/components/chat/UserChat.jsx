@@ -17,11 +17,9 @@ const UserChat = ({ chat, user }) => {
   }
 
   const unreadNotifications = unReadNotificationsFunc(notifications);
-  console.log("unreadNotifications ..........", unreadNotifications);
   const thisUserNotifications = unreadNotifications?.filter(
     (n) => n.chatId === chat?._id
   );
-  console.log("thisUserNotifications", thisUserNotifications);
   const isOnline = onlineUsers?.some(
     (u) => recipientUsers[0]?._id === u.userId
   );
@@ -64,8 +62,6 @@ const UserChat = ({ chat, user }) => {
       children: letters,
     };
   };
-
-  // console.log("recipientUsers", recipientUsers);
 
   const getAvatar = () => {
     if (chat?.members?.length > 2) {
