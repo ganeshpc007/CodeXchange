@@ -190,7 +190,9 @@ const ChatBox = () => {
                           <LuClipboardCopy
                             title="Copy code!"
                             style={{ fontSize: "20px", cursor: "pointer" }}
-                            onClick={() => handleCopyClipboard(cod, msg._id)}
+                            onClick={() =>
+                              handleCopyClipboard(msg.code, msg._id)
+                            }
                           />
                         )}
                         <TbFileDownload
