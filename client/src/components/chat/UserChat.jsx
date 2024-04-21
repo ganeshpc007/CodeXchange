@@ -1,28 +1,21 @@
 import { Avatar, Box, Stack, Typography, Badge } from "@mui/material";
-import { useFetchRecipients } from "../../hooks/useFetchRecipients";
 import { useFetchLatestMessage } from "../../hooks/useFetchLatestMessage";
 import moment from "moment";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { ChatContext } from "../../context/ChatContext";
 import { unReadNotificationsFunc } from "../../utils/unReadNotifications";
 
 const UserChat = ({ chat, user }) => {
   const { onlineUsers, notifications, markThisUserNotificationsAsRead } =
     useContext(ChatContext);
-  const { recipientUsers, loading } = useFetchRecipients(chat, user);
   const { latestMessage } = useFetchLatestMessage(chat);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   const unreadNotifications = unReadNotificationsFunc(notifications);
   const thisUserNotifications = unreadNotifications?.filter(
     (n) => n.chatId === chat?._id
   );
-  const isOnline = onlineUsers?.some(
-    (u) => recipientUsers[0]?._id === u.userId
-  );
+
+  const isOnline = onlineUsers?.some((u) => chat[0]?._id === u.userId);
 
   const stringToColor = (string) => {
     let hash = 0;
@@ -98,10 +91,10 @@ const UserChat = ({ chat, user }) => {
       );
     }
     return (
-      recipientUsers[0]?.name && (
+      chat?.recipients[0] && (
         <Avatar
           sx={{ width: 33, height: 33, border: "4px solid green" }}
-          {...stringAvatar(recipientUsers[0]?.name)}
+          {...stringAvatar(chat?.recipients[0]?.name)}
         />
       )
     );
@@ -111,7 +104,7 @@ const UserChat = ({ chat, user }) => {
     if (chat?.members?.length > 2) {
       return chat.teamName;
     }
-    return recipientUsers[0]?.name;
+    return chat?.recipients[0]?.name;
   };
 
   const truncateText = (text) => {
