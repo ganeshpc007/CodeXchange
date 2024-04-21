@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
+import { Avatar, InputAdornment, Button, IconButton } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
@@ -12,6 +11,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { AuthContext } from "../context/AuthContext";
 
 const Copyright = (props) => {
@@ -49,7 +50,15 @@ const SignUp = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarContent, setSnackbarContent] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -106,7 +115,10 @@ const SignUp = () => {
                   name="email"
                   autoComplete="email"
                   onChange={(e) => {
-                    updateSignUpInfo({ ...signUpInfo, email: e.target.value });
+                    updateSignUpInfo({
+                      ...signUpInfo,
+                      email: e.target.value.toLowerCase(),
+                    });
                   }}
                 />
               </Grid>
@@ -116,13 +128,28 @@ const SignUp = () => {
                   fullWidth
                   name="password"
                   label="Password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
-                  onChange={(e) => {
+                  value={signUpInfo.password} // Assuming signUpInfo.password is the current password value
+                  onChange={(e) =>
                     updateSignUpInfo({
                       ...signUpInfo,
                       password: e.target.value,
-                    });
+                    })
+                  }
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
                   }}
                 />
               </Grid>
@@ -138,7 +165,7 @@ const SignUp = () => {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signin" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
