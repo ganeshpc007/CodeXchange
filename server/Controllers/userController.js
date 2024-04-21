@@ -61,11 +61,15 @@ const loginUser = async (req, res) => {
   }
 };
 
+const findUserFun = async (userId) => {
+  return await userModel.findById(userId);
+};
+
 const findUser = async (req, res) => {
   try {
     const userId = req.params.userId;
 
-    const user = await userModel.findById(userId);
+    const user = await findUserFun(userId);
 
     if (!user) {
       return res.status(400).json("User not found");
@@ -111,4 +115,4 @@ const findByEmail = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, findUser, getUsers, findByEmail };
+export { registerUser, loginUser, findUser, getUsers, findByEmail,findUserFun };
