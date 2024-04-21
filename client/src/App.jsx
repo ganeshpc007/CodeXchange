@@ -1,19 +1,26 @@
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
-import SignUp from "./pages/SignUp";
-import SignIn from "./pages/SignIn";
-import Chat from "./pages/Chat";
-import Container from "@mui/material/Container";
+import { useContext, useEffect, React, lazy, Suspense } from "react";
+import LoadingScreen from "./components/LoadingScreen.jsx";
+
+const SignUp = lazy(() => import("./pages/SignUp"));
+const SignIn = lazy(() => import("./pages/SignIn"));
+const Chat = lazy(() => import("./pages/Chat"));
+
 import { AuthContext } from "./context/AuthContext";
 import { ChatContextProvider } from "./context/ChatContext";
+
 const App = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
-      navigate("/chat");
-    }
+    const handleUserChange = async () => {
+      if (user) {
+        navigate("/chat");
+      }
+    };
+
+    handleUserChange();
   }, [user, navigate]);
 
   return (
@@ -22,10 +29,32 @@ const App = () => {
         <Routes>
           <Route
             path="/chat"
-            element={user ? <Chat /> : <Navigate to="/signin" />}
+            element={
+              user ? (
+                <Suspense fallback={<LoadingScreen />}>
+                  <Chat />
+                </Suspense>
+              ) : (
+                <Navigate to="/signin" />
+              )
+            }
           />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route
+            path="/signin"
+            element={
+              <Suspense fallback={<LoadingScreen />}>
+                <SignIn />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <Suspense fallback={<LoadingScreen />}>
+                <SignUp />
+              </Suspense>
+            }
+          />
           <Route path="*" element={<Navigate to="/signin" />} />
         </Routes>
       </div>
