@@ -1,4 +1,5 @@
 import chatModel from "../Models/chatModel.js";
+import { findUserFun } from "./userController.js";
 
 const createChat = async (req, res) => {
   try {
@@ -27,7 +28,30 @@ const findUserChats = async (req, res) => {
   try {
     const userId = req.params.userId;
     const userChats = await chatModel.find({ members: { $in: [userId] } });
-    res.status(200).json(userChats);
+
+    const modifiedChats = await Promise.all(
+      userChats?.map(async (c) => {
+        const recipientIds = c.members.filter((id) => id !== userId);
+        const recipients = await Promise.all(
+          recipientIds.map(async (id) => {
+            const user = await findUserFun(id);
+            return { _id: user._id, name: user.name, email: user.email };
+          })
+        );
+        const { _id, members, teamName } = { ...c._doc };
+        if (recipientIds.length > 1) {
+          return { _id, members, teamName, recipients };
+        }
+        return {
+          _id,
+          members,
+          recipients,
+        };
+      })
+    );
+
+    console.log("modifiedChats", modifiedChats);
+    res.status(200).json(modifiedChats);
   } catch (error) {
     res.status(500).json(error);
   }
