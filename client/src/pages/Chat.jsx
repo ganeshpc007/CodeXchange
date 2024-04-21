@@ -9,21 +9,19 @@ import {
   IconButton,
   Paper,
   Snackbar,
-  Menu,
+  Box,
 } from "@mui/material";
 import profileAvatar from "../assets/avatar.svg";
 import SearchIcon from "@mui/icons-material/Search";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import AppDrawer from "../components/AppDrawer.jsx";
 import UserChat from "../components/chat/UserChat.jsx";
 import { ChatContext } from "../context/ChatContext.jsx";
 import { AuthContext } from "../context/AuthContext.jsx";
 import ChatBox from "../components/chat/ChatBox.jsx";
 import ShareCode from "../components/chat/ShareCode.jsx";
-import { unReadNotificationsFunc } from "../utils/unReadNotifications.js";
-import moment from "moment";
 import { IoPersonAdd } from "react-icons/io5";
 import NewChat from "../components/NewChat.jsx";
+import Notification from "../components/Notification.jsx";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -56,25 +54,12 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const Chat = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const { user } = useContext(AuthContext);
   const {
     userChats,
     updateCurrentChat,
     alert,
     updateAlert,
-    notifications,
-    allUsers,
-    markNotificationAsRead,
-    markAllNotificationAsRead,
     updateOpenNewChat,
   } = useContext(ChatContext);
 
@@ -87,12 +72,6 @@ const Chat = () => {
   const toggleDrawer = (newOpen) => () => {
     setDrawerOpen(newOpen);
   };
-
-  const unReadNotifications = unReadNotificationsFunc(notifications);
-  const modifiedNotifications = notifications?.map((n) => {
-    const sender = allUsers?.find((u) => u?._id === n?.senderId);
-    return { ...n, senderName: sender?.name };
-  });
 
   const handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -125,81 +104,6 @@ const Chat = () => {
     }
   };
 
-  const notificationMenu = () => {
-    return (
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: "visible",
-            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            mt: 1.5,
-            "& .MuiAvatar-root": {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-            "&::before": {
-              content: '""',
-              display: "block",
-              position: "absolute",
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: "background.paper",
-              transform: "translateY(-50%) rotate(45deg)",
-              zIndex: 0,
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-      >
-        <div className="notifications-box">
-          <div className="notifications-header">
-            <div style={{ fontWeight: "700", fontSize: "20px" }}>
-              Notifications
-            </div>
-            <div
-              className="mark-as-read"
-              onClick={() => markAllNotificationAsRead(notifications)}
-            >
-              Mark all as read
-            </div>
-          </div>
-          {modifiedNotifications?.length === 0 ? (
-            <span className="notification">No notifications yet..</span>
-          ) : null}
-          {modifiedNotifications &&
-            modifiedNotifications.map((n, index) => {
-              return (
-                <div
-                  key={index}
-                  className={
-                    n.isRead ? "notification" : "notification not-read"
-                  }
-                  onClick={() => {
-                    markNotificationAsRead(n, userChats, notifications);
-                    handleClose();
-                  }}
-                >
-                  <span>{n.senderName} sent you new message</span>
-                  <span className="notification-time">
-                    {moment(n.date).calendar()}
-                  </span>
-                </div>
-              );
-            })}
-        </div>
-      </Menu>
-    );
-  };
-
   return (
     <div
       style={{
@@ -210,6 +114,7 @@ const Chat = () => {
         padding: "0px !important",
         width: "100%",
         height: "96vh",
+        position: "relative",
       }}
     >
       <AppDrawer open={drawerOpen} toggleDrawer={toggleDrawer} />
@@ -230,6 +135,13 @@ const Chat = () => {
           {alert?.text}
         </Alert>
       </Snackbar>
+      <Box sx={{ position: "absolute", top: "20px", right: "20px", zIndex: 1 }}>
+        <span className="title extra-sm-title highlighted-text">
+          Code
+          <span style={{ color: "red" }}>X</span>
+          change
+        </span>
+      </Box>
       <Stack sx={{ height: "100%", width: "30%", position: "relative" }}>
         <Stack
           direction="row"
@@ -279,16 +191,7 @@ const Chat = () => {
               <SearchIcon />
             </IconButton>
           </Paper>
-          <Badge
-            color="secondary"
-            badgeContent={unReadNotifications?.length}
-            max={5}
-            sx={{ cursor: "pointer" }}
-            onClick={handleClick}
-          >
-            <NotificationsIcon />
-          </Badge>
-          {notificationMenu()}
+          <Notification />
         </Stack>
         <Stack
           sx={{
