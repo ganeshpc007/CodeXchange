@@ -103,18 +103,31 @@ const AppDrawer = ({ open, toggleDrawer }) => {
           {user?.email && user.email}
         </Typography>
       </Stack>
-      <Stack sx={{ justifyContent: "center" }}>
-        <Button
-          href="https://www.linkedin.com/in/ganesh-p-c/"
-          target="_blank"
-          typography="body2"
+      <Stack sx={{ justifyContent: "center", gap: 1 }}>
+        <Box
           sx={{
-            fontSize: 11,
-            textTransform: "none",
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
           }}
         >
-          Dev Outreach Channel
-        </Button>
+          <span className="title small-title highlighted-text">
+            Code
+            <span style={{ color: "red" }}>X</span>
+            change
+          </span>
+          <Button
+            href="https://www.linkedin.com/in/ganesh-p-c/"
+            target="_blank"
+            typography="body2"
+            sx={{
+              fontSize: 11,
+              textTransform: "none",
+            }}
+          >
+            Dev Outreach Channel
+          </Button>
+        </Box>
         <Button
           sx={{ bgcolor: "lightgray", p: 1, borderRadius: 1 }}
           startIcon={<LogoutIcon />}
