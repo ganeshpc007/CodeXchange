@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Stack,
   Alert,
@@ -78,6 +78,12 @@ const Chat = () => {
     updateOpenNewChat,
   } = useContext(ChatContext);
 
+  const [filteredChats, setFilteredChats] = useState([]);
+
+  useEffect(() => {
+    setFilteredChats(userChats);
+  }, [userChats]);
+
   const toggleDrawer = (newOpen) => () => {
     setDrawerOpen(newOpen);
   };
@@ -93,6 +99,30 @@ const Chat = () => {
       return;
     }
     updateAlert({ ...alert, open: false });
+  };
+
+  const handleChatSearch = (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    if (searchTerm) {
+      const filteredChats = userChats?.filter((c) => {
+        if (c?.recipients.length > 1) {
+          const teamName = c?.teamName.toLowerCase();
+          if (teamName.includes(searchTerm)) {
+            return true;
+          }
+          return false;
+        } else {
+          const recipientName = c?.recipients[0]?.name.toLowerCase();
+          if (recipientName.includes(searchTerm)) {
+            return true;
+          }
+          return false;
+        }
+      });
+      setFilteredChats(filteredChats);
+    } else {
+      setFilteredChats(userChats);
+    }
   };
 
   const notificationMenu = () => {
@@ -238,6 +268,7 @@ const Chat = () => {
             <InputBase
               sx={{ ml: 1, flex: 1 }}
               placeholder="Search.."
+              onChange={handleChatSearch}
               // inputProps={{ "aria-label": "search google maps" }}
             />
             <IconButton
@@ -281,7 +312,7 @@ const Chat = () => {
             },
           }}
         >
-          {userChats?.map((chat, index) => {
+          {filteredChats?.map((chat, index) => {
             return (
               <div
                 key={index}
