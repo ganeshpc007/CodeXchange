@@ -1,6 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
+import { Avatar, InputAdornment, Button, IconButton } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
@@ -13,6 +12,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { AuthContext } from "../context/AuthContext.jsx";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 function Copyright(props) {
   return (
@@ -49,7 +49,15 @@ const SignIn = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarContent, setSnackbarContent] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -118,7 +126,10 @@ const SignIn = () => {
                 autoComplete="email"
                 autoFocus
                 onChange={(e) => {
-                  updateSignInInfo({ ...signInInfo, email: e.target.value });
+                  updateSignInInfo({
+                    ...signInInfo,
+                    email: e.target.value.toLowerCase(),
+                  });
                 }}
               />
               <TextField
@@ -127,11 +138,26 @@ const SignIn = () => {
                 fullWidth
                 name="password"
                 label="Password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 autoComplete="current-password"
-                onChange={(e) => {
-                  updateSignInInfo({ ...signInInfo, password: e.target.value });
+                value={signInInfo.password} // Assuming signInInfo.password is the current password value
+                onChange={(e) =>
+                  updateSignInInfo({ ...signInInfo, password: e.target.value })
+                }
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                 }}
               />
               <Button
@@ -145,7 +171,7 @@ const SignIn = () => {
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="/signup" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
