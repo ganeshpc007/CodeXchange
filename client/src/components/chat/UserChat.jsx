@@ -1,7 +1,7 @@
+import { useContext } from "react";
 import { Avatar, Box, Stack, Typography, Badge } from "@mui/material";
 import { useFetchLatestMessage } from "../../hooks/useFetchLatestMessage";
 import moment from "moment";
-import { useContext, useEffect } from "react";
 import { ChatContext } from "../../context/ChatContext";
 import { unReadNotificationsFunc } from "../../utils/unReadNotifications";
 
