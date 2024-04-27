@@ -1,14 +1,14 @@
 import { useCallback, useContext, useEffect, useState, useRef } from "react";
 import { Stack, Box, Typography, Button } from "@mui/material";
-import CodeDisplay from "../CodeDisplay";
-import { ChatContext } from "../../context/ChatContext";
-import { AuthContext } from "../../context/AuthContext";
 import { TbFileDownload } from "react-icons/tb";
 import { LuClipboardCopy } from "react-icons/lu";
 import { HiOutlineClipboardCheck } from "react-icons/hi";
-import moment from "moment";
 import { GrSend } from "react-icons/gr";
+import moment from "moment";
+import { ChatContext } from "../../context/ChatContext";
+import { AuthContext } from "../../context/AuthContext";
 import { useFetchRecipients } from "../../hooks/useFetchRecipients";
+import CodeDisplay from "../CodeDisplay";
 
 const ChatBox = () => {
   const [codeCopy, setCodeCopy] = useState("");
