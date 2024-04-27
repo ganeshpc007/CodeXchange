@@ -1,17 +1,21 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Backdrop, Box, Modal, Fade, Button } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
-
 import {
+  Backdrop,
+  Box,
+  Modal,
+  Fade,
+  Button,
   Typography,
   Stack,
   TextField,
   Checkbox,
   FormControlLabel,
+  Autocomplete,
 } from "@mui/material";
-import { ChatContext } from "../../context/ChatContext";
-import Autocomplete from "@mui/material/Autocomplete";
+import SendIcon from "@mui/icons-material/Send";
 import Editor from "@monaco-editor/react";
+
+import { ChatContext } from "../../context/ChatContext";
 import { AuthContext } from "../../context/AuthContext";
 import { useFetchRecipients } from "../../hooks/useFetchRecipients";
 
@@ -55,10 +59,6 @@ const ShareCode = () => {
     setKeepWindowClosed(isChecked);
     localStorage.setItem("keepWindowClosed", JSON.stringify(isChecked));
   }, []);
-
-  // console.log("message", message);
-  // console.log("language", language);
-  // console.log("code", code);
 
   const handleLanguageChange = useCallback((event, value) => {
     setLanguage(value);
