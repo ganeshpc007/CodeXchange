@@ -11,17 +11,18 @@ import {
   Snackbar,
   Box,
 } from "@mui/material";
-import profileAvatar from "../assets/avatar.svg";
 import SearchIcon from "@mui/icons-material/Search";
+import { IoPersonAdd } from "react-icons/io5";
 import AppDrawer from "../components/AppDrawer.jsx";
 import UserChat from "../components/chat/UserChat.jsx";
-import { ChatContext } from "../context/ChatContext.jsx";
-import { AuthContext } from "../context/AuthContext.jsx";
 import ChatBox from "../components/chat/ChatBox.jsx";
 import ShareCode from "../components/chat/ShareCode.jsx";
-import { IoPersonAdd } from "react-icons/io5";
+import profileAvatar from "../assets/avatar.svg";
 import NewChat from "../components/NewChat.jsx";
 import Notification from "../components/Notification.jsx";
+
+import { ChatContext } from "../context/ChatContext.jsx";
+import { AuthContext } from "../context/AuthContext.jsx";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
