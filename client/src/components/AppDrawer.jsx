@@ -1,16 +1,20 @@
 import { useContext, useState } from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import { styled, useTheme } from "@mui/material/styles";
-import Badge from "@mui/material/Badge";
-import Avatar from "@mui/material/Avatar";
-import profileAvatar from "../assets/avatar.svg";
-import { Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Drawer,
+  Button,
+  styled,
+  Badge,
+  Avatar,
+  Stack,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+} from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogTitle from "@mui/material/DialogTitle";
+
+import profileAvatar from "../assets/avatar.svg";
 import { AuthContext } from "../context/AuthContext";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
