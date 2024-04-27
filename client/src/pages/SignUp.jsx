@@ -1,16 +1,22 @@
 import { useContext, useEffect, useState } from "react";
-import { Avatar, InputAdornment, Button, IconButton } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import {
+  Avatar,
+  InputAdornment,
+  Button,
+  IconButton,
+  CssBaseline,
+  TextField,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  createTheme,
+  ThemeProvider,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { AuthContext } from "../context/AuthContext";
@@ -86,6 +92,13 @@ const SignUp = () => {
             alignItems: "center",
           }}
         >
+          <Box sx={{ m: "0 0 10px 0" }}>
+            <span className="title small-title highlighted-text">
+              Code
+              <span style={{ color: "red" }}>X</span>
+              change
+            </span>
+          </Box>
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
