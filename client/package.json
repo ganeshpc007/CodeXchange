@@ -16,6 +16,7 @@
     "@mui/icons-material": "^5.15.14",
     "@mui/lab": "^5.0.0-alpha.169",
     "@mui/material": "^5.15.14",
+    "@vercel/analytics": "^1.2.2",
     "ace-builds": "^1.32.9",
     "highlight.js": "^11.9.0",
     "moment": "^2.30.1",
