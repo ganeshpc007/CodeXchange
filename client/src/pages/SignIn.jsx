@@ -1,18 +1,25 @@
 import { useContext, useState, useEffect } from "react";
-import { Avatar, InputAdornment, Button, IconButton } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
+import React from "react";
+import {
+  Avatar,
+  InputAdornment,
+  Button,
+  IconButton,
+  CssBaseline,
+  TextField,
+  Link,
+  Paper,
+  Box,
+  Grid,
+  Typography,
+  createTheme,
+  ThemeProvider,
+  Snackbar,
+  Alert,
+} from "@mui/material";
+import { LockOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
+
 import { AuthContext } from "../context/AuthContext.jsx";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 function Copyright(props) {
   return (
@@ -104,8 +111,15 @@ const SignIn = () => {
               alignItems: "center",
             }}
           >
+            <Box sx={{ m: "0 0 10px 0" }}>
+              <span className="title small-title highlighted-text">
+                Code
+                <span style={{ color: "red" }}>X</span>
+                change
+              </span>
+            </Box>
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
+              <LockOutlined />
             </Avatar>
             <Typography component="h1" variant="h5">
               Sign in
