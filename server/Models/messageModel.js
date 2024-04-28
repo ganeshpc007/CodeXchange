@@ -14,6 +14,6 @@ const messageSchema = new mongoose.Schema(
   }
 );
 
-const messageModel = mongoose.model("codify", messageSchema);
+const messageModel = mongoose.model("x_code_message", messageSchema);
 
 export default messageModel;
