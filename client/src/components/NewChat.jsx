@@ -64,7 +64,7 @@ const NewChat = () => {
     >
       <Fade in={openNewChat}>
         <Box sx={style}>
-          <Typography sx={{ m: 1, fontSize: "26px" }}>New Contact</Typography>
+          <Typography sx={{ m: 1, fontSize: "26px" }}>New Chat</Typography>
           <Stack
             sx={{
               justifyContent: "space-between",
@@ -74,7 +74,7 @@ const NewChat = () => {
           >
             <TextField
               sx={{ width: "75%" }}
-              label="Email of Reciepent"
+              label="Reciepent Email"
               variant="outlined"
               autoComplete="off"
               required
