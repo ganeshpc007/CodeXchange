@@ -8,7 +8,7 @@ import moment from "moment";
 import { ChatContext } from "../../context/ChatContext";
 import { AuthContext } from "../../context/AuthContext";
 import { useFetchRecipients } from "../../hooks/useFetchRecipients";
-import CodeDisplay from "../CodeDisplay";
+import CodeDisplay from "./CodeDisplay";
 
 const ChatBox = () => {
   const [codeCopy, setCodeCopy] = useState("");
