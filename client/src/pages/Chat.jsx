@@ -17,7 +17,7 @@ import AppDrawer from "../components/AppDrawer.jsx";
 import UserChat from "../components/chat/UserChat.jsx";
 import ChatBox from "../components/chat/ChatBox.jsx";
 import ShareCode from "../components/chat/ShareCode.jsx";
-import profileAvatar from "../assets/avatar.svg";
+import { FaUserCircle } from "react-icons/fa";
 import NewChat from "../components/NewChat.jsx";
 import Notification from "../components/Notification.jsx";
 
@@ -111,7 +111,7 @@ const Chat = () => {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        gap: "1rem",
+        // gap: "1rem",
         padding: "0px !important",
         width: "100%",
         height: "96vh",
@@ -153,7 +153,7 @@ const Chat = () => {
             alignItems: "center",
             width: "100%",
             height: "10%",
-            justifyContent: "center",
+            justifyContent: "space-around",
           }}
         >
           <StyledBadge
@@ -164,11 +164,14 @@ const Chat = () => {
             }}
             onClick={toggleDrawer(true)}
           >
-            <Avatar
+            {/* <Avatar
               alt="Profile Avatar "
-              src={profileAvatar}
+              src={<FaUserCircle />}
               sx={{ cursor: "pointer" }}
-            />
+            /> */}
+            <IconButton color="primary" size="large">
+              <FaUserCircle style={{ color: "black" }} />
+            </IconButton>
           </StyledBadge>
           <Paper
             component="form"
@@ -176,6 +179,7 @@ const Chat = () => {
               p: "2px",
               display: "flex",
               alignItems: "center",
+              width:"70%"
             }}
           >
             <InputBase
@@ -216,17 +220,19 @@ const Chat = () => {
             },
           }}
         >
-          {filteredChats?.map((chat, index) => {
-            return (
-              <div
-                key={index}
-                onClick={() => updateCurrentChat(chat)}
-                style={{ width: "100%" }}
-              >
-                <UserChat chat={chat} user={user} />
-              </div>
-            );
-          })}
+          {filteredChats.length === 0
+            ? "No chats history at this moment!"
+            : filteredChats?.map((chat, index) => {
+                return (
+                  <div
+                    key={index}
+                    onClick={() => updateCurrentChat(chat)}
+                    style={{ width: "100%" }}
+                  >
+                    <UserChat chat={chat} user={user} />
+                  </div>
+                );
+              })}
         </Stack>
         <div style={{ position: "absolute", bottom: "30px", right: "30px" }}>
           <IconButton
@@ -238,7 +244,7 @@ const Chat = () => {
           </IconButton>
         </div>
       </Stack>
-      <Stack sx={{ height: "100%", width: "67%" }}>
+      <Stack sx={{ height: "100%", width: "70%" }}>
         <ChatBox />
       </Stack>
     </div>
