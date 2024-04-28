@@ -10,6 +10,6 @@ const chatSchema = new mongoose.Schema(
   }
 );
 
-const chatModel = mongoose.model("CodifyChat", chatSchema);
+const chatModel = mongoose.model("x_code_chat", chatSchema);
 
 export default chatModel;
