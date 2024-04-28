@@ -18,7 +18,14 @@ const createChat = async (req, res) => {
     const newChat = new chatModel({ members: members, teamName });
     const response = await newChat.save();
 
-    res.status(200).json(response);
+    const user = await findUserFun(members[1]);
+    const { _id, name, email } = user;
+    const chat = {
+      _id: response._id,
+      members: response.members,
+      recipients: [{ _id, name, email }],
+    };
+    res.status(200).json(chat);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -50,7 +57,7 @@ const findUserChats = async (req, res) => {
       })
     );
 
-    console.log("modifiedChats", modifiedChats);
+    // console.log("modifiedChats", modifiedChats);
     res.status(200).json(modifiedChats);
   } catch (error) {
     res.status(500).json(error);
