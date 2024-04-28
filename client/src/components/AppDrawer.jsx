@@ -11,11 +11,13 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
+  IconButton,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 import profileAvatar from "../assets/avatar.svg";
 import { AuthContext } from "../context/AuthContext";
+import { FaUserCircle } from "react-icons/fa";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -94,11 +96,16 @@ const AppDrawer = ({ open, toggleDrawer }) => {
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
-          <Avatar
+          {/* <Avatar
             alt="Profile Avatar"
             src={profileAvatar}
             sx={{ cursor: "pointer", width: 80, height: 80, padding: 2 }}
-          />
+          /> */}
+
+          <IconButton color="primary" sx={{fontSize:"50px"}}>
+            <FaUserCircle style={{ color: "black" }} />
+          </IconButton>
+
         </StyledBadge>
         <Typography variant="h6" component="div" sx={{ marginTop: 1 }}>
           {user?.name && user.name}
