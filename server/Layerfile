@@ -8,5 +8,5 @@ RUN sudo npm install npm@latest -g
 
 COPY . .
 RUN npm install
-RUN BACKGROUND node app.js
+RUN BACKGROUND node index.js
 EXPOSE WEBSITE http://localhost:3000
