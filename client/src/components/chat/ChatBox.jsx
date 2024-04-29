@@ -197,7 +197,7 @@ const ChatBox = () => {
                         )}
                         <TbFileDownload
                           title="Download file!"
-                          style={{ fontSize: "20px", cursor: "pointer" }}
+                          style={{ fontSize: "22px", cursor: "pointer" }}
                         />
                       </div>
                     )}
