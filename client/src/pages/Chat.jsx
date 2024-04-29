@@ -153,7 +153,7 @@ const Chat = () => {
             alignItems: "center",
             width: "100%",
             height: "10%",
-            justifyContent: "space-around",
+            justifyContent: "space-evenly",
           }}
         >
           <StyledBadge
@@ -179,7 +179,8 @@ const Chat = () => {
               p: "2px",
               display: "flex",
               alignItems: "center",
-              width:"70%"
+              width:"70%",
+              marginLeft:"0 !important"
             }}
           >
             <InputBase
