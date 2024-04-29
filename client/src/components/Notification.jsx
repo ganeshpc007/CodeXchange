@@ -108,7 +108,7 @@ const Notification = () => {
         color="secondary"
         badgeContent={unReadNotifications?.length}
         max={5}
-        sx={{ cursor: "pointer" }}
+        sx={{ cursor: "pointer", marginLeft:"0 !important"  }}
         onClick={handleClick}
       >
         <NotificationsIcon />
