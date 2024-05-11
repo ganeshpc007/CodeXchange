@@ -32,7 +32,8 @@ export const ChatContextProvider = ({ children }) => {
   // initialize socket
   useEffect(() => {
     // socket domain/server
-    const newSocket = io("http://localhost:5000");
+    // const newSocket = io("http://localhost:5000");
+    const newSocket = io("https://server-codexchange.onrender.com");
     setSocket(newSocket);
 
     // clean up socket, on reconnection or no longer needed
