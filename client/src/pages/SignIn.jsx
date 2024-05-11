@@ -73,6 +73,13 @@ const SignIn = () => {
     setSnackbarOpen(false);
   };
 
+  const getGuestCredentials = () => {
+    updateSignInInfo({
+      email: "guest@codexchange.com",
+      password: "ShareCode@2024",
+    });
+  };
+
   useEffect(() => {
     if (signInError?.error) {
       setSnackbarContent(signInError?.message);
@@ -139,6 +146,7 @@ const SignIn = () => {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value={signInInfo.email}
                 onChange={(e) => {
                   updateSignInInfo({
                     ...signInInfo,
@@ -182,6 +190,16 @@ const SignIn = () => {
                 disabled={isSignInLoading}
               >
                 {isSignInLoading ? "One Moment, Please..." : "Sign In"}
+              </Button>
+              <Button
+                type="button"
+                fullWidth
+                variant="outlined"
+                color="error"
+                sx={{ mt: 3, mb: 2, textTransform: "capitalize" }}
+                onClick={() => getGuestCredentials()}
+              >
+                Get Guest User Credentials
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
