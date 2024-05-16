@@ -1,5 +1,6 @@
 // export const baseUrl = "http://localhost:5000/api";
-export const baseUrl = "https://server-codexchange.onrender.com/api";
+// export const baseUrl = "https://server-codexchange.onrender.com/api";
+export const baseUrl = "https://xcode-server.vercel.app/api";
 
 export const postRequest = async (url, body) => {
   const response = await fetch(url, {
