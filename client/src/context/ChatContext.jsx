@@ -29,15 +29,42 @@ export const ChatContextProvider = ({ children }) => {
 
   const { user } = useContext(AuthContext);
 
-  // initialize socket
+  // // initialize socket
+  // useEffect(() => {
+  //   // socket domain/server
+  //   // const newSocket = io("http://localhost:5000");
+  //   // const newSocket = io("https://xcode-server.vercel.app");
+  //   const newSocket = io("https://server-codexchange.onrender.com");
+  //   setSocket(newSocket);
+
+  //   // clean up socket, on reconnection or no longer needed
+  //   return () => {
+  //     newSocket.disconnect();
+  //   };
+  // }, [user]);
+
   useEffect(() => {
-    // socket domain/server
-    // const newSocket = io("http://localhost:5000");
-    const newSocket = io("https://server-codexchange.onrender.com");
-    // const newSocket = io("https://xcode-server.vercel.app");
+    const newSocket = io("https://server-codexchange.onrender.com", {
+      reconnectionAttempts: 5,
+      timeout: 20000,
+      transports: ["websocket"],
+    });
+
     setSocket(newSocket);
 
-    // clean up socket, on reconnection or no longer needed
+    newSocket.on("connect_error", (err) => {
+      console.error("Connection error:", err);
+    });
+
+    newSocket.on("reconnect_attempt", () => {
+      console.log("Attempting to reconnect...");
+    });
+
+    newSocket.on("reconnect_failed", () => {
+      console.error("Reconnection failed");
+    });
+
+    // Clean up socket on unmount or before reinitializing
     return () => {
       newSocket.disconnect();
     };
@@ -236,7 +263,7 @@ export const ChatContextProvider = ({ children }) => {
       members,
       teamName,
     });
-    console.log("response", response);
+    // console.log("response", response);
     if (response.error) {
       return console.log("Error occored while chat creation", response);
     }
