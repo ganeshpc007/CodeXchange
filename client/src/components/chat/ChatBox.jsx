@@ -175,7 +175,7 @@ const ChatBox = () => {
                             <img
                               loading="lazy"
                               width="18"
-                              src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${msg.lang}/${msg.lang}-original.svg`}
+                              src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${msg.lang.icon}/${msg.lang.icon}-original.svg`}
                               alt={msg.lang}
                             />
                           ) : (

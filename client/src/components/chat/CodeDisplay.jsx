@@ -12,7 +12,7 @@ const CodeDisplay = ({ code, language }) => {
   };
   return (
     <SyntaxHighlighter
-      language={language}
+      language={language?.label?.toLowerCase()}
       style={solarizedlight}
       customStyle={customStyle}
       showLineNumbers

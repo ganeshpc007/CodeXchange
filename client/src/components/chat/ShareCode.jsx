@@ -92,7 +92,7 @@ const ShareCode = () => {
         user?._id,
         message,
         code,
-        language.icon
+        language
       );
       if (messageSentSuccessful) {
         updateOpenShareCode(!keepWindowClosed);
@@ -124,7 +124,7 @@ const ShareCode = () => {
                 loading="lazy"
                 width="20"
                 src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${option.icon}/${option.icon}-original.svg`}
-                alt={option.label}
+                alt={option.icon}
               />
             )}
 
@@ -192,7 +192,7 @@ const ShareCode = () => {
           </Stack>
           <Editor
             height="76%"
-            language={language?.icon}
+            language={language?.label.toLowerCase()}
             theme="vs-dark"
             value={code}
             onChange={handleCodeChange}
@@ -239,36 +239,44 @@ const ShareCode = () => {
 };
 
 const languages = [
-  { label: "JavaScript", icon: "javascript" },
-  { label: "Python", icon: "python" },
-  { label: "Java", icon: "java" },
+  { label: "Bash", icon: "bash" },
+  { label: "C", icon: "c" },
   { label: "C++", icon: "cplusplus" },
   { label: "C#", icon: "csharp" },
-  { label: "Ruby", icon: "ruby" },
-  { label: "Swift", icon: "swift" },
-  { label: "Go", icon: "go" },
-  { label: "Rust", icon: "rust" },
-  { label: "TypeScript", icon: "typescript" },
-  { label: "PHP", icon: "php" },
-  { label: "Kotlin", icon: "kotlin" },
-  { label: "Scala", icon: "scala" },
-  { label: "Bash", icon: "bash" },
-  { label: "R", icon: "r" },
-  { label: "Perl", icon: "perl" },
   { label: "Clojure", icon: "clojure" },
+  { label: "CoffeeScript", icon: "coffeescript" },
+  { label: "CSS", icon: "css3" },
+  { label: "Dart", icon: "dart" },
+  { label: "Dockerfile", icon: "docker" },
   { label: "Elixir", icon: "elixir" },
   { label: "Erlang", icon: "erlang" },
-  { label: "Haskell", icon: "haskell" },
-  { label: "SQL", icon: "mysql" },
-  { label: "Dart", icon: "dart" },
-  { label: "Groovy", icon: "groovy" },
-  { label: "Lua", icon: "lua" },
+  { label: "F#", icon: "fsharp" },
   { label: "Fortran", icon: "fortran" },
+  { label: "Go", icon: "go" },
+  { label: "Groovy", icon: "groovy" },
+  { label: "Handlebars", icon: "handlebars" },
+  { label: "Haskell", icon: "haskell" },
+  { label: "HTML", icon: "html5" },
+  { label: "Java", icon: "java" },
+  { label: "JavaScript", icon: "javascript" },
+  { label: "Julia", icon: "julia" },
+  { label: "Kotlin", icon: "kotlin" },
+  { label: "Lua", icon: "lua" },
   { label: "MATLAB", icon: "matlab" },
+  { label: "Perl", icon: "perl" },
+  { label: "PHP", icon: "php" },
+  { label: "PowerShell", icon: "powershell" },
+  { label: "Python", icon: "python" },
+  { label: "R", icon: "r" },
+  { label: "Ruby", icon: "ruby" },
+  { label: "Rust", icon: "rust" },
+  { label: "Sass", icon: "sass" },
+  { label: "Scala", icon: "scala" },
   { label: "Solidity", icon: "solidity" },
-  { label: "HTML5", icon: "html5" },
-  { label: "CSS3", icon: "css3" },
-  { label: "Others", icon: "others" },
+  { label: "SQL", icon: "mysql" }, // Using MySQL icon as a placeholder for SQL
+  { label: "Swift", icon: "swift" },
+  { label: "TypeScript", icon: "typescript" },
+  { label: "Others", icon: "others" }, // Placeholder for other languages
 ];
 
 export default ShareCode;
