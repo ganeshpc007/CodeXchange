@@ -5,9 +5,12 @@ const messageSchema = new mongoose.Schema(
     chatId: String,
     senderId: String,
     text: String,
-    code: { type: Object, required: false },
+    code: { type: String, required: false },
     isCode: { type: Boolean, default: true },
-    lang: String,
+    lang: {
+      label: String,
+      icon: String,
+    },
   },
   {
     timestamps: true,
