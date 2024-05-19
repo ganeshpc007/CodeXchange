@@ -179,8 +179,8 @@ const Chat = () => {
               p: "2px",
               display: "flex",
               alignItems: "center",
-              width:"70%",
-              marginLeft:"0 !important"
+              width: "70%",
+              marginLeft: "0 !important",
             }}
           >
             <InputBase
@@ -221,7 +221,7 @@ const Chat = () => {
             },
           }}
         >
-          {filteredChats.length === 0
+          {filteredChats?.length === 0
             ? "No chats history at this moment!"
             : filteredChats?.map((chat, index) => {
                 return (
