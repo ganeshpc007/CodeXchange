@@ -5,7 +5,7 @@ const messageSchema = new mongoose.Schema(
     chatId: String,
     senderId: String,
     text: String,
-    code: { type: String, required: false },
+    code: { type: Object, required: false },
     isCode: { type: Boolean, default: true },
     lang: String,
   },
