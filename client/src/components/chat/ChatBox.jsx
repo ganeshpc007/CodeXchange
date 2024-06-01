@@ -14,6 +14,7 @@ const ChatBox = () => {
   const [codeCopy, setCodeCopy] = useState("");
   const { currentChat, messages, updateOpenShareCode, onlineUsers } =
     useContext(ChatContext);
+  console.log("messages", messages);
   const { user } = useContext(AuthContext);
 
   const lastMessageRef = useRef(null);
@@ -53,6 +54,13 @@ const ChatBox = () => {
     if (currentChat?.members?.length > 2) return false;
     const recipientsId = currentChat?.members.filter((id) => id !== user?._id);
     return onlineUsers?.some((u) => recipientsId[0] === u.userId);
+  };
+
+  const getSenderName = (senderId) => {
+    if (senderId === user?._id) {
+      return user.name;
+    }
+    return recipientUsers[0]?.name;
   };
 
   return (
@@ -137,7 +145,7 @@ const ChatBox = () => {
                     padding: "6px 10px",
                   }}
                 >
-                  <Typography>Ganesh p c</Typography>
+                  <Typography>{getSenderName(msg.senderId)}</Typography>
                   <Typography
                     variant="body2"
                     sx={{
@@ -175,7 +183,7 @@ const ChatBox = () => {
                             <img
                               loading="lazy"
                               width="18"
-                              src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${msg.lang.icon}/${msg.lang.icon}-original.svg`}
+                              src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${msg?.lang?.icon}/${msg?.lang?.icon}-original.svg`}
                               alt={msg.lang}
                             />
                           ) : (
