@@ -14,7 +14,7 @@ const ChatBox = () => {
   const [codeCopy, setCodeCopy] = useState("");
   const { currentChat, messages, updateOpenShareCode, onlineUsers } =
     useContext(ChatContext);
-  console.log("messages", messages);
+  // console.log("messages", messages);
   const { user } = useContext(AuthContext);
 
   const lastMessageRef = useRef(null);
