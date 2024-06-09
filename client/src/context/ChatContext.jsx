@@ -57,7 +57,7 @@ export const ChatContextProvider = ({ children }) => {
     });
 
     newSocket.on("reconnect_attempt", () => {
-      console.log("Attempting to reconnect...");
+      // console.log("Attempting to reconnect...");
     });
 
     newSocket.on("reconnect_failed", () => {
