@@ -57,6 +57,20 @@ const SignIn = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarContent, setSnackbarContent] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [randomImage, setRandomImage] = useState(null);
+
+  useEffect(() => {
+    const fetchRandomImage = async () => {
+      try {
+        const response = await fetch("https://picsum.photos/1200/800");
+        setRandomImage(response.url);
+      } catch (error) {
+        console.error("Error fetching random image:", error);
+      }
+    };
+  
+    fetchRandomImage();
+  }, []);
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -97,8 +111,7 @@ const SignIn = () => {
           sm={4}
           md={7}
           sx={{
-            backgroundImage:
-              "url(https://source.unsplash.com/random?wallpapers)",
+            backgroundImage: `url(https://picsum.photos/1200/800)`,
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
