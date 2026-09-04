@@ -87,10 +87,21 @@ const SignIn = () => {
     setSnackbarOpen(false);
   };
 
+  // Set VITE_GUEST_EMAIL / VITE_GUEST_PASSWORD in your .env file (see .env.example)
+  // to enable the guest demo login. Button is a no-op if unset.
   const getGuestCredentials = () => {
+    const guestEmail = import.meta.env.VITE_GUEST_EMAIL;
+    const guestPassword = import.meta.env.VITE_GUEST_PASSWORD;
+
+    if (!guestEmail || !guestPassword) {
+      setSnackbarContent("Guest login is not configured.");
+      setSnackbarOpen(true);
+      return;
+    }
+
     updateSignInInfo({
-      email: "guest@codexchange.com",
-      password: "ShareCode@2024",
+      email: guestEmail,
+      password: guestPassword,
     });
   };
 

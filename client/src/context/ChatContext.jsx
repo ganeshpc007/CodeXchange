@@ -29,22 +29,11 @@ export const ChatContextProvider = ({ children }) => {
 
   const { user } = useContext(AuthContext);
 
-  // // initialize socket
-  // useEffect(() => {
-  //   // socket domain/server
-  //   // const newSocket = io("http://localhost:5000");
-  //   // const newSocket = io("https://xcode-server.vercel.app");
-  //   const newSocket = io("https://server-codexchange.onrender.com");
-  //   setSocket(newSocket);
-
-  //   // clean up socket, on reconnection or no longer needed
-  //   return () => {
-  //     newSocket.disconnect();
-  //   };
-  // }, [user]);
-
+  // Set VITE_SOCKET_URL in your .env file (see .env.example).
+  // Falls back to a local server for development.
   useEffect(() => {
-    const newSocket = io("https://server-codexchange.onrender.com", {
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
+    const newSocket = io(socketUrl, {
       reconnectionAttempts: 5,
       timeout: 20000,
       transports: ["websocket"],
